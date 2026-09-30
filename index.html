@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【無料】テキスト差分比較ツール - ブラウザで簡単文章チェック</title>
+  <meta name="description" content="Text AとText Bの差分をリアルタイムで比較し、削除・追加箇所を2画面で分かりやすくハイライト表示する無料のWebツールです。データはサーバーへ送信されず安心です。">
+  
+  <!-- 差分比較ライブラリ (jsdiff) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.2.0/diff.min.js"></script>
+
+  <!-- 構造化データ（SEO対策） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "テキスト差分比較ツール",
+    "operatingSystem": "All",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  }
+  </script>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 0 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .two-column {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .column {
+      width: 50%;
+    }
+    .column label, .column-title {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 10px;
+      font-size: 14px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    .button-group {
+      margin-bottom: 25px;
+      text-align: right;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+    }
+    
+    /* 比較結果表示エリア（左右2画面） */
+    .result-box {
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      min-height: 140px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: monospace, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ハイライトカラー（赤：削除、緑：追加） */
+    del {
+      background-color: #ffebe9;
+      color: #d9534f;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 1px 3px;
+      border-radius: 2px;
+    }
+    ins {
+      background-color: #c6f6d5; /* くっきり見やすい緑系背景 */
+      color: #155724;           /* 濃い緑色文字 */
+      text-decoration: none;
+      font-weight: bold;
+      padding: 1px 3px;
+      border-radius: 2px;
+    }
+
+    /* セキュリティ案内・SEO解説用スタイル */
+    .info-card {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f0f4f8;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .seo-content {
+      margin-top: 40px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .seo-content h2 {
+      font-size: 18px;
+      margin-top: 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>テキスト差分比較ツール</h1>
+  <p class="subtitle">2つの文章やコードの差分をリアルタイムで左右比較・ハイライト表示します。</p>
+  
+  <!-- 入力エリア -->
+  <div class="two-column">
+    <div class="column">
+      <label for="text1">Text A</label>
+      <textarea id="text1" placeholder="Text Aを入力..."></textarea>
+    </div>
+    <div class="column">
+      <label for="text2">Text B</label>
+      <textarea id="text2" placeholder="Text Bを入力..."></textarea>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button id="clear-btn">テキストをクリア</button>
+  </div>
+
+  <h2>比較結果</h2>
+  
+  <!-- 結果エリア（左右2画面） -->
+  <div class="two-column">
+    <div class="column">
+      <span class="column-title">Text A</span>
+      <div id="result-left" class="result-box">ここに差分が表示されます</div>
+    </div>
+    <div class="column">
+      <span class="column-title">Text B</span>
+      <div id="result-right" class="result-box">ここに差分が表示されます</div>
+    </div>
+  </div>
+
+  <!-- セキュリティ・安心感のアピール -->
+  <div class="info-card">
+    <strong>🔒 安全なセキュリティ構造</strong>
+    <p style="margin: 5px 0 0 0;">入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ完了するため、機密情報や個人情報を含む文章でも安心してご利用いただけます。</p>
+  </div>
+
+  <!-- SEO対策コンテンツ -->
+  <div class="seo-content">
+    <h2>テキスト比較ツールの使い方</h2>
+    <ol>
+      <li>「Text A」に元の文章やコードを貼り付けます。</li>
+      <li>「Text B」に修正後の文章やコードを貼り付けます。</li>
+      <li>下部の比較結果エリアの左側（Text A）に削除された部分（赤色）、右側（Text B）に追加された部分（緑色）がリアルタイムで表示されます。</li>
+    </ol>
+
+    <h2>主な利用シーン</h2>
+    <ul>
+      <li><strong>契約書・規約の改訂チェック：</strong> 修正前後の文章で抜け漏れがないか確認する際。</li>
+      <li><strong>プログラムコードの差分確認：</strong> HTML/CSS/JavaScriptなどの修正箇所を特定する際。</li>
+      <li><strong>原稿・レポートの校正：</strong> リライト後の文章が正しく反映されているかのチェック。</li>
+    </ul>
+  </div>
+
+  <script>
+    const text1 = document.getElementById('text1');
+    const text2 = document.getElementById('text2');
+    const resultLeft = document.getElementById('result-left');
+    const resultRight = document.getElementById('result-right');
+    const clearBtn = document.getElementById('clear-btn');
+
+    // 2画面比較処理
+    function compareText() {
+      if (!text1.value && !text2.value) {
+        resultLeft.innerHTML = 'ここに差分が表示されます';
+        resultRight.innerHTML = 'ここに差分が表示されます';
+        return;
+      }
+
+      const diff = Diff.diffChars(text1.value, text2.value);
+      const leftFragment = document.createDocumentFragment();
+      const rightFragment = document.createDocumentFragment();
+
+      diff.forEach((part) => {
+        if (part.removed) {
+          const del = document.createElement('del');
+          del.appendChild(document.createTextNode(part.value));
+          leftFragment.appendChild(del);
+        } else if (part.added) {
+          const ins = document.createElement('ins');
+          ins.appendChild(document.createTextNode(part.value));
+          rightFragment.appendChild(ins);
+        } else {
+          leftFragment.appendChild(document.createTextNode(part.value));
+          rightFragment.appendChild(document.createTextNode(part.value));
+        }
+      });
+
+      resultLeft.innerHTML = '';
+      resultLeft.appendChild(leftFragment);
+
+      resultRight.innerHTML = '';
+      resultRight.appendChild(rightFragment);
+    }
+
+    // イベントリスナー
+    text1.addEventListener('input', compareText);
+    text2.addEventListener('input', compareText);
+
+    // クリアボタン機能
+    clearBtn.addEventListener('click', () => {
+      text1.value = '';
+      text2.value = '';
+      compareText();
+    });
+  </script>
+
+</body>
+</html>
