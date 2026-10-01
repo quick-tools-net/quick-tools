@@ -484,7 +484,7 @@
     }
 
     function switchMode(mode) {
-      if (isRunning) pauseTimer();
+      pauseTimer();
       currentMode = mode;
       
       if (mode === 'work') {
@@ -532,6 +532,7 @@
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           isRunning = false;
+          btnStart.textContent = i18n[currentLang].btnStart;
           playAlertSound();
 
           if (currentMode === 'work') {
@@ -547,7 +548,10 @@
 
     function pauseTimer() {
       isRunning = false;
-      clearInterval(timerInterval);
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
       btnStart.textContent = i18n[currentLang].btnStart;
     }
 
