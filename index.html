@@ -22,7 +22,7 @@
       --primary-hover: #4338ca;
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
-      --result-bg: #f1f5f9; /* 比較結果用の背景色（少し濃いめの落ち着いたグレー） */
+      --result-bg: #f1f5f9;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border-color: #cbd5e1;
@@ -54,10 +54,13 @@
       border-radius: 12px;
       margin: 20px 0 30px 0;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     nav {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -85,6 +88,29 @@
       color: #fff;
       font-weight: 600;
       background-color: var(--primary-color);
+    }
+
+    /* 言語切り替えボタン */
+    .lang-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 2px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #ffffff;
+      color: #0f172a;
     }
 
     .hero-section {
@@ -115,14 +141,33 @@
       flex-direction: column;
       min-width: 0;
     }
+    .column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
     .column-box label {
       font-weight: 600;
-      margin-bottom: 8px;
       font-size: 14px;
       color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    }
+
+    /* ボタン類 */
+    .btn-clear {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-clear:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
     }
 
     textarea {
@@ -256,51 +301,61 @@
   <header>
     <nav>
       <span class="logo">Quick Tools</span>
-      <a href="index.html" class="active">テキスト比較</a>
-      <a href="word-count.html">文字数カウント</a>
+      <a href="index.html" class="active" id="nav-diff">テキスト比較</a>
+      <a href="word-count.html" id="nav-word">文字数カウント</a>
     </nav>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
   </header>
 
   <div class="hero-section">
-    <h1>テキスト差分比較ツール</h1>
-    <p class="subtitle">2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。</p>
+    <h1 id="title">テキスト差分比較ツール</h1>
+    <p class="subtitle" id="subtitle">2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。</p>
   </div>
 
   <!-- 入力エリア（左右分割） -->
   <div class="two-column-container">
     <div class="column-box">
-      <label for="text-old">Text A</label>
+      <div class="column-header">
+        <label for="text-old" id="label-text-a">Text A</label>
+        <button class="btn-clear" onclick="clearText('text-old')" id="btn-clear-a">クリア</button>
+      </div>
       <textarea id="text-old" placeholder="Text A を入力してください..."></textarea>
     </div>
     <div class="column-box">
-      <label for="text-new">Text B</label>
+      <div class="column-header">
+        <label for="text-new" id="label-text-b">Text B</label>
+        <button class="btn-clear" onclick="clearText('text-new')" id="btn-clear-b">クリア</button>
+      </div>
       <textarea id="text-new" placeholder="Text B を入力してください..."></textarea>
     </div>
   </div>
 
   <!-- 差分結果表示エリア（左右分割） -->
   <div class="result-container">
-    <h2>比較結果</h2>
+    <h2 id="result-title">比較結果</h2>
     <div class="two-column-container">
       <div class="column-box">
-        <div id="result-old" class="result-box result-placeholder">テキストを入力すると、ここに Text A の比較が表示されます。</div>
+        <div id="result-old" class="result-box result-placeholder"></div>
       </div>
       <div class="column-box">
-        <div id="result-new" class="result-box result-placeholder">テキストを入力すると、ここに Text B の比較が表示されます。</div>
+        <div id="result-new" class="result-box result-placeholder"></div>
       </div>
     </div>
   </div>
 
   <!-- セキュリティ案内 -->
   <div class="info-card">
-    <strong>🔒 安全なセキュリティ構造</strong>
-    <p>入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。</p>
+    <strong id="sec-title">🔒 安全なセキュリティ構造</strong>
+    <p id="sec-desc">入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。</p>
   </div>
 
   <!-- SEO対策コンテンツ -->
   <div class="seo-content">
-    <h2>テキスト差分比較ツールの特長</h2>
-    <ul>
+    <h2 id="seo-title">テキスト差分比較ツールの特長</h2>
+    <ul id="seo-list">
       <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
       <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
       <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
@@ -314,6 +369,85 @@
     const resultOld = document.getElementById('result-old');
     const resultNew = document.getElementById('result-new');
 
+    let currentLang = 'ja';
+
+    // 翻訳辞書
+    const i18n = {
+      ja: {
+        navDiff: 'テキスト比較',
+        navWord: '文字数カウント',
+        title: 'テキスト差分比較ツール',
+        subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
+        placeholderA: 'Text A を入力してください...',
+        placeholderB: 'Text B を入力してください...',
+        clearBtn: 'クリア',
+        resultTitle: '比較結果',
+        resultPlaceholderA: 'テキストを入力すると、ここに Text A の比較が表示されます。',
+        resultPlaceholderB: 'テキストを入力すると、ここに Text B の比較が表示されます。',
+        noText: '（テキストなし）',
+        secTitle: '🔒 安全なセキュリティ構造',
+        secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。',
+        seoTitle: 'テキスト差分比較ツールの特長',
+        seoList: `
+          <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
+          <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
+          <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
+        `
+      },
+      en: {
+        navDiff: 'Text Diff',
+        navWord: 'Word Count',
+        title: 'Text Diff Checker',
+        subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
+        placeholderA: 'Enter Text A here...',
+        placeholderB: 'Enter Text B here...',
+        clearBtn: 'Clear',
+        resultTitle: 'Comparison Result',
+        resultPlaceholderA: 'Enter text above to see comparison for Text A.',
+        resultPlaceholderB: 'Enter text above to see comparison for Text B.',
+        noText: '(No text)',
+        secTitle: '🔒 Safe & Secure',
+        secDesc: 'Your text data is never sent to any external servers. All comparison processing is performed entirely within your browser (client-side), making it safe for confidential documents.',
+        seoTitle: 'Features of Text Diff Checker',
+        seoList: `
+          <li><strong>Side-by-Side View:</strong> Easily spot changes with a clear split-screen comparison.</li>
+          <li><strong>Real-time Comparison:</strong> Differences are calculated instantly as you type or paste.</li>
+          <li><strong>100% Free & No Sign-up:</strong> No registration or installation required. Use it immediately.</li>
+        `
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      // ボタンのアクティブ化
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+
+      // UIテキスト更新
+      document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
+      document.getElementById('nav-word').textContent = i18n[lang].navWord;
+      document.getElementById('title').textContent = i18n[lang].title;
+      document.getElementById('subtitle').textContent = i18n[lang].subtitle;
+      textOld.placeholder = i18n[lang].placeholderA;
+      textNew.placeholder = i18n[lang].placeholderB;
+      document.getElementById('btn-clear-a').textContent = i18n[lang].clearBtn;
+      document.getElementById('btn-clear-b').textContent = i18n[lang].clearBtn;
+      document.getElementById('result-title').textContent = i18n[lang].resultTitle;
+      document.getElementById('sec-title').textContent = i18n[lang].secTitle;
+      document.getElementById('sec-desc').textContent = i18n[lang].secDesc;
+      document.getElementById('seo-title').textContent = i18n[lang].seoTitle;
+      document.getElementById('seo-list').innerHTML = i18n[lang].seoList;
+
+      compareText();
+    }
+
+    function clearText(id) {
+      document.getElementById(id).value = '';
+      compareText();
+    }
+
     function compareText() {
       const valOld = textOld.value;
       const valNew = textNew.value;
@@ -321,8 +455,8 @@
       if (!valOld && !valNew) {
         resultOld.className = 'result-box result-placeholder';
         resultNew.className = 'result-box result-placeholder';
-        resultOld.innerHTML = 'テキストを入力すると、ここに Text A の比較が表示されます。';
-        resultNew.innerHTML = 'テキストを入力すると、ここに Text B の比較が表示されます。';
+        resultOld.innerHTML = i18n[currentLang].resultPlaceholderA;
+        resultNew.innerHTML = i18n[currentLang].resultPlaceholderB;
         return;
       }
 
@@ -342,22 +476,25 @@
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
 
-        if (op === -1) { // 削除 (Text A にのみ赤背景で表示)
+        if (op === -1) {
           htmlOld += `<del>${text}</del>`;
-        } else if (op === 1) { // 追加 (Text B にのみ緑背景で表示)
+        } else if (op === 1) {
           htmlNew += `<ins>${text}</ins>`;
-        } else { // 共通部分 (両方に表示)
+        } else {
           htmlOld += text;
           htmlNew += text;
         }
       }
 
-      resultOld.innerHTML = htmlOld || '<span class="result-placeholder">（テキストなし）</span>';
-      resultNew.innerHTML = htmlNew || '<span class="result-placeholder">（テキストなし）</span>';
+      resultOld.innerHTML = htmlOld || `<span class="result-placeholder">${i18n[currentLang].noText}</span>`;
+      resultNew.innerHTML = htmlNew || `<span class="result-placeholder">${i18n[currentLang].noText}</span>`;
     }
 
     textOld.addEventListener('input', compareText);
     textNew.addEventListener('input', compareText);
+
+    // 初期化
+    setLanguage('ja');
   </script>
 
 </body>
