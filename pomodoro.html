@@ -240,7 +240,7 @@
       font-size: 18px;
     }
 
-    /* セキュリティ・SEO案内スタイル */
+    /* テスト再生ボタン付きの案内カード */
     .info-card {
       margin-top: 40px;
       padding: 20px 24px;
@@ -249,17 +249,38 @@
       border-radius: 12px;
       font-size: 14px;
       color: #0369a1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-    .info-card strong {
+    .info-text strong {
       font-size: 15px;
       display: flex;
       align-items: center;
       gap: 6px;
       margin-bottom: 4px;
     }
-    .info-card p {
+    .info-text p {
       margin: 0;
       color: #0c4a6e;
+    }
+    .btn-test-sound {
+      background: #ffffff;
+      border: 1px solid #0284c7;
+      color: #0284c7;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .btn-test-sound:hover {
+      background: #0284c7;
+      color: #ffffff;
     }
 
     .seo-content {
@@ -291,6 +312,10 @@
       }
       .timer-display {
         font-size: 60px;
+      }
+      .info-card {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -335,10 +360,13 @@
     </div>
   </div>
 
-  <!-- セキュリティ・機能案内 -->
+  <!-- アラーム案内 & テスト再生ボタン -->
   <div class="info-card">
-    <strong id="sec-title">🔔 アラーム音とバックグラウンド動作</strong>
-    <p id="sec-desc">タイマー終了時には通知音が鳴り、ページのタブタイトルにも残り時間が表示されるため、別タブで作業を行っていても時間を逃しません。</p>
+    <div class="info-text">
+      <strong id="sec-title">🔔 アラーム音とバックグラウンド動作</strong>
+      <p id="sec-desc">タイマー終了時には通知音が鳴り、タブタイトルにも残り時間が表示されます。</p>
+    </div>
+    <button class="btn-test-sound" onclick="playAlertSound()" id="btn-test">🔊 音声テスト</button>
   </div>
 
   <!-- SEO対策コンテンツ -->
@@ -358,6 +386,7 @@
     let isRunning = false;
     let completedSessions = 0;
     let currentLang = 'ja';
+    let audioCtx = null;
 
     const WORK_TIME = 25 * 60;
     const BREAK_TIME = 5 * 60;
@@ -381,10 +410,10 @@
         btnStart: 'スタート',
         btnPause: '一時停止',
         btnReset: 'リセット',
+        btnTest: '🔊 音声テスト',
         sessionLabel: '本日の完了セッション: ',
-        sessionUnit: ' 回',
         secTitle: '🔔 アラーム音とバックグラウンド動作',
-        secDesc: 'タイマー終了時には通知音が鳴り、ページのタブタイトルにも残り時間が表示されるため、別タブで作業を行っていても時間を逃しません。',
+        secDesc: 'タイマー終了時には通知音が鳴り、タブタイトルにも残り時間が表示されます。',
         seoTitle: 'ポモドーロ・テクニックとは？',
         seoList: `
           <li><strong>25分集中＋5分休憩：</strong> 短い集中と小休憩をセットにすることで、脳の疲労を防ぎ持続的な集中力を維持します。</li>
@@ -403,8 +432,8 @@
         btnStart: 'Start',
         btnPause: 'Pause',
         btnReset: 'Reset',
+        btnTest: '🔊 Test Sound',
         sessionLabel: 'Completed Sessions Today: ',
-        sessionUnit: '',
         secTitle: '🔔 Audio Alert & Tab Status',
         secDesc: 'A notification sound plays when time is up, and remaining time is shown in the browser tab title.',
         seoTitle: 'What is the Pomodoro Technique?',
@@ -432,6 +461,7 @@
       tabBreak.textContent = i18n[lang].tabBreak;
       btnStart.textContent = isRunning ? i18n[lang].btnPause : i18n[lang].btnStart;
       document.getElementById('btn-reset').textContent = i18n[lang].btnReset;
+      document.getElementById('btn-test').textContent = i18n[lang].btnTest;
 
       document.getElementById('session-box').childNodes[0].textContent = i18n[lang].sessionLabel;
       document.getElementById('sec-title').textContent = i18n[lang].secTitle;
@@ -473,7 +503,18 @@
       updateDisplay();
     }
 
+    // AudioContext の初期化（ユーザー操作で呼び出し）
+    function initAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
     function toggleTimer() {
+      initAudioContext();
       if (isRunning) {
         pauseTimer();
       } else {
@@ -516,28 +557,36 @@
       updateDisplay();
     }
 
-    // Web Audio API による終了アラーム音生成
+    // 聞こえやすいアラーム音（ピピピッ）
     function playAlertSound() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+      initAudioContext();
+      if (!audioCtx) return;
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      const now = audioCtx.currentTime;
 
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+      // ビープ音1回目
+      createTone(880, now, 0.12);
+      // ビープ音2回目
+      createTone(880, now + 0.18, 0.12);
+      // ビープ音3回目（少し高音）
+      createTone(1046.5, now + 0.36, 0.25);
+    }
 
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+    function createTone(freq, startTime, duration) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.6);
-      } catch (e) {
-        // AudioContextが制限されている場合はスキップ
-      }
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.5, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration);
     }
 
     // 初期化
