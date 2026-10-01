@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <!-- ※ご自身のGA4測定ID（G-XXXXXXXXXX）に書き換えてください -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【無料】リアルタイム文字数カウントツール - 原稿用紙換算・行数計算</title>
+  <meta name="description" content="入力したテキストの文字数、空白除外文字数、行数、原稿用紙換算枚数をリアルタイムで計測する無料Webツールです。データはサーバーに送信されず安全です。">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 0 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* 共通ヘッダーナビゲーション */
+    header {
+      background-color: #333;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      color: #fff;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #fff;
+    }
+    nav a.active {
+      color: #fff;
+      font-weight: bold;
+      border-bottom: 2px solid #4caf50;
+      padding-bottom: 2px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    /* カウンター表示グリッド */
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card-title {
+      font-size: 13px;
+      color: #6c757d;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .card-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #212529;
+    }
+    .card-unit {
+      font-size: 14px;
+      margin-left: 2px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 250px;
+      padding: 12px;
+      font-size: 15px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    .button-group {
+      margin-top: 10px;
+      margin-bottom: 25px;
+      text-align: right;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* セキュリティ・SEO案内用スタイル */
+    .info-card {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f0f4f8;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .seo-content {
+      margin-top: 40px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .seo-content h2 {
+      font-size: 18px;
+      margin-top: 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 共通ヘッダー -->
+  <header>
+    <nav>
+      <span class="logo">Quick Tools</span>
+      <a href="index.html">テキスト比較</a>
+      <a href="word-count.html" class="active">文字数カウント</a>
+    </nav>
+  </header>
+
+  <h1>文字数カウントツール</h1>
+  <p class="subtitle">テキストを入力するだけで、文字数・原稿用紙枚数・行数をリアルタイムで計測します。</p>
+
+  <!-- カウント結果のカード群 -->
+  <div class="counter-grid">
+    <div class="card">
+      <div class="card-title">文字数（スペース込み）</div>
+      <div class="card-value"><span id="count-total">0</span><span class="card-unit">文字</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">文字数（スペース除く）</div>
+      <div class="card-value"><span id="count-no-space">0</span><span class="card-unit">文字</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">原稿用紙換算（400字）</div>
+      <div class="card-value"><span id="count-manuscript">0</span><span class="card-unit">枚</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">行数</div>
+      <div class="card-value"><span id="count-lines">0</span><span class="card-unit">行</span></div>
+    </div>
+  </div>
+
+  <!-- 入力エリア -->
+  <textarea id="text-input" placeholder="ここに文章を入力または貼り付けてください..."></textarea>
+
+  <div class="button-group">
+    <button id="clear-btn">テキストをクリア</button>
+  </div>
+
+  <!-- セキュリティ案内 -->
+  <div class="info-card">
+    <strong>🔒 安全なセキュリティ構造</strong>
+    <p style="margin: 5px 0 0 0;">入力されたテキストデータは外部サーバーへ送信されません。すべての計測処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密情報や執筆中の原稿でも安心してご利用いただけます。</p>
+  </div>
+
+  <!-- SEO対策コンテンツ -->
+  <div class="seo-content">
+    <h2>文字数カウントツールの主な機能</h2>
+    <ul>
+      <li><strong>スペース込み文字数：</strong> 助動詞や記号、空白を含む全体の文字数を算出します。</li>
+      <li><strong>スペース除く文字数：</strong> 半角・全角スペースや改行を除外した純粋な文字数をカウントします。</li>
+      <li><strong>原稿用紙換算枚数：</strong> 一般的な400字詰め原稿用紙（20行×20文字）に換算した枚数を表示します。</li>
+      <li><strong>行数カウント：</strong> 改行コードに基づく全体の行数を計算します。</li>
+    </ul>
+
+    <h2>利用シーン</h2>
+    <ul>
+      <li><strong>レポート・論文の執筆：</strong> 指定文字数制限の確認や原稿用紙換算のチェック。</li>
+      <li><strong>Webライティング・SEO記事制作：</strong> 記事の見出しごとの文字数調整や全体の体裁確認。</li>
+      <li><strong>SNS・広告文作成：</strong> 文字制限のある投稿メッセージの事前チェック。</li>
+    </ul>
+  </div>
+
+  <script>
+    const textInput = document.getElementById('text-input');
+    const countTotal = document.getElementById('count-total');
+    const countNoSpace = document.getElementById('count-no-space');
+    const countManuscript = document.getElementById('count-manuscript');
+    const countLines = document.getElementById('count-lines');
+    const clearBtn = document.getElementById('clear-btn');
+
+    function updateCounts() {
+      const text = textInput.value;
+
+      const totalChars = text.length;
+      const noSpaceChars = text.replace(/\s/g, '').length;
+      const manuscriptPages = text === '' ? 0 : (totalChars / 400).toFixed(1);
+      const lines = text === '' ? 0 : text.split('\n').length;
+
+      countTotal.textContent = totalChars.toLocaleString();
+      countNoSpace.textContent = noSpaceChars.toLocaleString();
+      countManuscript.textContent = manuscriptPages;
+      countLines.textContent = lines.toLocaleString();
+    }
+
+    textInput.addEventListener('input', updateCounts);
+
+    clearBtn.addEventListener('click', () => {
+      textInput.value = '';
+      updateCounts();
+    });
+  </script>
+
+</body>
+</html>
