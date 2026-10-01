@@ -213,25 +213,23 @@
       word-break: break-all;
       overflow-wrap: anywhere;
       font-size: 14px;
-      line-height: 1.8;
+      line-height: 2.2; /* 行間を十分広げて上下が離れるように設定 */
       color: #334155;
+      overflow: hidden;
     }
     .result-placeholder {
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾（パディング領域を守る指定） */
+    /* 差分ハイライトの装飾（上下のくっつき＆上方向への突き抜けを防止） */
     ins, del {
       text-decoration: none;
-      padding: 1px 4px;
+      padding: 2px 3px;
       border-radius: 3px;
       font-weight: 600;
-      display: inline-block;
-      max-width: 100%;
-      vertical-align: bottom;
-      overflow-wrap: break-word;
-      word-break: break-all;
-      white-space: pre-wrap;
+      display: inline;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
     ins {
       background-color: var(--add-bg);
@@ -555,7 +553,7 @@
     textOld.addEventListener('input', () => compareText(true));
     textNew.addEventListener('input', () => compareText(true));
 
-    // 初期化（ページ読込時にURLパラメータがあれば自動読み込み）
+    // 初期化
     setLanguage('ja');
     loadStateFromUrl();
   </script>
