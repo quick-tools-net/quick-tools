@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
   <!-- Google tag (gtag.js) -->
-  <!-- ※ご自身のGA4測定ID（G-XXXXXXXXXX）に書き換えてください -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -15,12 +14,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>【無料】テキスト差分比較ツール - ブラウザで簡単文章チェック | Quick Tools</title>
-  <meta name="description" content="2つのテキストの差分（変更点・追加・削除）をリアルタイムでハイライト表示する無料Webツールです。データはサーバーに送信されず安全です。">
+  <meta name="description" content="2つのテキストの差分（変更点・追加・削除）を左右分割でハイライト表示する無料Webツールです。データはサーバーに送信されず安全です。">
   
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      max-width: 950px;
+      max-width: 1000px;
       margin: 30px auto;
       padding: 0 20px;
       color: #333;
@@ -73,25 +72,28 @@
       margin-bottom: 20px;
     }
 
-    /* エディタエリア */
-    .editor-container {
+    /* エディタ＆結果コンテナ（2列表示） */
+    .two-column-container {
       display: flex;
       gap: 20px;
       margin-bottom: 20px;
     }
-    .editor-box {
+    .column-box {
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
-    .editor-box label {
+    .column-box label, .column-box h3 {
       font-weight: bold;
       margin-bottom: 8px;
       font-size: 14px;
+      color: #444;
     }
+
     textarea {
       width: 100%;
-      height: 200px;
+      height: 180px;
       padding: 10px;
       font-size: 14px;
       box-sizing: border-box;
@@ -101,7 +103,7 @@
       resize: vertical;
     }
 
-    /* 差分結果表示エリア */
+    /* 差分結果表示エリア（左右分割） */
     .result-container {
       margin-top: 25px;
     }
@@ -110,11 +112,12 @@
       border: 1px solid #e9ecef;
       border-radius: 6px;
       padding: 15px;
-      min-height: 100px;
+      min-height: 150px;
       white-space: pre-wrap;
       word-break: break-all;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.8;
+      box-sizing: border-box;
     }
 
     /* 差分ハイライトの装飾 */
@@ -151,6 +154,12 @@
       font-size: 18px;
       margin-top: 25px;
     }
+
+    @media (max-width: 600px) {
+      .two-column-container {
+        flex-direction: column;
+      }
+    }
   </style>
 
   <!-- diff-match-patch ライブラリ -->
@@ -168,22 +177,33 @@
   </header>
 
   <h1>テキスト差分比較ツール</h1>
-  <p class="subtitle">2つの文章の変更点（追加・削除・修正）を即時に比較・ハイライト表示します。</p>
+  <p class="subtitle">2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。</p>
 
-  <div class="editor-container">
-    <div class="editor-box">
+  <!-- 入力エリア（左右分割） -->
+  <div class="two-column-container">
+    <div class="column-box">
       <label for="text-old">比較元のテキスト（変更前）</label>
       <textarea id="text-old" placeholder="ここに変更前の文章を入力してください..."></textarea>
     </div>
-    <div class="editor-box">
+    <div class="column-box">
       <label for="text-new">比較対象のテキスト（変更後）</label>
       <textarea id="text-new" placeholder="ここに変更後の文章を入力してください..."></textarea>
     </div>
   </div>
 
+  <!-- 差分結果表示エリア（左右分割） -->
   <div class="result-container">
     <h2>比較結果</h2>
-    <div id="result-display" class="result-box">テキストを入力すると、ここに差分が表示されます。</div>
+    <div class="two-column-container">
+      <div class="column-box">
+        <h3>変更前（削除箇所をハイライト）</h3>
+        <div id="result-old" class="result-box">テキストを入力すると、ここに変更前の比較が表示されます。</div>
+      </div>
+      <div class="column-box">
+        <h3>変更後（追加箇所をハイライト）</h3>
+        <div id="result-new" class="result-box">テキストを入力すると、ここに変更後の比較が表示されます。</div>
+      </div>
+    </div>
   </div>
 
   <!-- セキュリティ案内 -->
@@ -196,16 +216,9 @@
   <div class="seo-content">
     <h2>テキスト差分比較ツールの特長</h2>
     <ul>
+      <li><strong>左右分割表示：</strong> 変更前と変更後を2画面で並べて確認できるため、変更箇所が直感的に分かります。</li>
       <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
-      <li><strong>視覚的なハイライト：</strong> 追加された箇所は<span style="background-color: #e6ffec; border-bottom: 2px solid #2da44e;">緑色</span>、削除された箇所は<span style="background-color: #ffebe9; color: #cf222e;">赤色の打ち消し線</span>で分かりやすく表示されます。</li>
       <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
-    </ul>
-
-    <h2>おすすめの利用シーン</h2>
-    <ul>
-      <li><strong>契約書・マニュアルの改訂チェック：</strong> 修正前後の文章の変更漏れや不要な変更の確認。</li>
-      <li><strong>ソースコード・設定ファイルの確認：</strong> 編集箇所や設定変更パラメータの比較。</li>
-      <li><strong>Web記事・ブログの校正：</strong> 修正前後の文章推敲やリライト結果の確認。</li>
     </ul>
   </div>
 
@@ -213,21 +226,25 @@
     const dmp = new diff_match_patch();
     const textOld = document.getElementById('text-old');
     const textNew = document.getElementById('text-new');
-    const resultDisplay = document.getElementById('result-display');
+    const resultOld = document.getElementById('result-old');
+    const resultNew = document.getElementById('result-new');
 
     function compareText() {
       const valOld = textOld.value;
       const valNew = textNew.value;
 
       if (!valOld && !valNew) {
-        resultDisplay.innerHTML = 'テキストを入力すると、ここに差分が表示されます。';
+        resultOld.innerHTML = 'テキストを入力すると、ここに変更前の比較が表示されます。';
+        resultNew.innerHTML = 'テキストを入力すると、ここに変更後の比較が表示されます。';
         return;
       }
 
       const diffs = dmp.diff_main(valOld, valNew);
       dmp.diff_cleanupSemantic(diffs);
 
-      let html = '';
+      let htmlOld = '';
+      let htmlNew = '';
+
       for (let i = 0; i < diffs.length; i++) {
         const op = diffs[i][0];
         const text = diffs[i][1]
@@ -235,16 +252,18 @@
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
 
-        if (op === 1) { // 追加 (DIFF_INSERT)
-          html += `<ins>${text}</ins>`;
-        } else if (op === -1) { // 削除 (DIFF_DELETE)
-          html += `<del>${text}</del>`;
-        } else { // 変更なし (DIFF_EQUAL)
-          html += text;
+        if (op === -1) { // 削除 (変更前の画面だけに赤表示)
+          htmlOld += `<del>${text}</del>`;
+        } else if (op === 1) { // 追加 (変更後の画面だけに緑表示)
+          htmlNew += `<ins>${text}</ins>`;
+        } else { // 共通部分 (両方に表示)
+          htmlOld += text;
+          htmlNew += text;
         }
       }
 
-      resultDisplay.innerHTML = html;
+      resultOld.innerHTML = htmlOld || '（テキストなし）';
+      resultNew.innerHTML = htmlNew || '（テキストなし）';
     }
 
     textOld.addEventListener('input', compareText);
