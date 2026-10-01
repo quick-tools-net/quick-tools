@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -220,15 +220,15 @@
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾 */
+    /* 差分ハイライトの装飾（1文字単位で独立表示） */
     ins, del {
       text-decoration: none;
-      padding: 2px 3px;
+      padding: 1px 3px;
       border-radius: 3px;
       font-weight: 600;
-      display: inline;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
+      display: inline-block;
+      margin: 0 1px;
+      vertical-align: baseline;
     }
     ins {
       background-color: var(--add-bg);
@@ -471,15 +471,34 @@
       }
     }
 
-    // スペース文字を「折り返し可能」なテキスト表現に補正する関数
-    function formatTextForDisplay(str) {
+    // エスケープ処理
+    function escapeHtml(str) {
       return str
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        // スペース（半角・全角）の直後にゼロ幅スペース(&#8203;)を挿入し、枠右端で必ず折り返させる
-        .replace(/( )/g, ' $1&#8203;')
-        .replace(/( )/g, ' &#8203;');
+        .replace(/>/g, '&gt;');
+    }
+
+    // 差分テキストをHTML化する処理（スペースや改行を1文字ずつの要素に分解）
+    function renderDiffHtml(diffText, tagName) {
+      const safeText = escapeHtml(diffText);
+      const openTag = tagName ? `<${tagName}>` : '';
+      const closeTag = tagName ? `</${tagName}>` : '';
+
+      let resultHtml = '';
+      for (let i = 0; i < safeText.length; i++) {
+        const char = safeText[i];
+        if (char === ' ') {
+          resultHtml += `${openTag}&nbsp;${closeTag}&#8203;`;
+        } else if (char === ' ') {
+          resultHtml += `${openTag} ${closeTag}&#8203;`;
+        } else if (char === '\n') {
+          resultHtml += `${openTag}&nbsp;${closeTag}<br>`;
+        } else {
+          resultHtml += `${openTag}${char}${closeTag}`;
+        }
+      }
+      return resultHtml;
     }
 
     function compareText(isUserInteraction = true) {
@@ -503,15 +522,15 @@
 
         for (let i = 0; i < diffs.length; i++) {
           const op = diffs[i][0];
-          const text = formatTextForDisplay(diffs[i][1]);
+          const text = diffs[i][1];
 
           if (op === -1) {
-            htmlOld += `<del>${text}</del>`;
+            htmlOld += renderDiffHtml(text, 'del');
           } else if (op === 1) {
-            htmlNew += `<ins>${text}</ins>`;
+            htmlNew += renderDiffHtml(text, 'ins');
           } else {
-            htmlOld += text;
-            htmlNew += text;
+            htmlOld += renderDiffHtml(text, null);
+            htmlNew += renderDiffHtml(text, null);
           }
         }
 
