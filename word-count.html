@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
   <!-- Google tag (gtag.js) -->
-  <!-- ※ご自身のGA4測定ID（G-XXXXXXXXXX）に書き換えてください -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,141 +13,273 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【無料】リアルタイム文字数カウントツール - 原稿用紙換算・行数計算</title>
-  <meta name="description" content="入力したテキストの文字数、空白除外文字数、行数、原稿用紙換算枚数をリアルタイムで計測する無料Webツールです。データはサーバーに送信されず安全です。">
+  <title>【無料】文字数カウントツール - リアルタイム文章量チェック | Quick Tools</title>
+  <meta name="description" content="入力したテキストの文字数（スペースあり/なし）、単語数、行数、原稿用紙枚数をリアルタイムで計測する無料Webツールです。データはサーバーに送信されず安全です。">
   
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --result-bg: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      max-width: 950px;
-      margin: 30px auto;
-      padding: 0 20px;
-      color: #333;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* 共通ヘッダーナビゲーション */
     header {
-      background-color: #333;
-      padding: 12px 20px;
-      border-radius: 6px;
-      margin-bottom: 25px;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      padding: 14px 24px;
+      border-radius: 12px;
+      margin: 20px 0 30px 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     nav {
       display: flex;
-      gap: 15px;
+      gap: 16px;
       align-items: center;
       flex-wrap: wrap;
     }
     .logo {
       color: #fff;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
       margin-right: 10px;
-      font-size: 16px;
     }
     nav a {
-      color: #ccc;
+      color: #94a3b8;
       text-decoration: none;
       font-size: 14px;
-      transition: color 0.2s;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
     nav a:hover {
       color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
     }
     nav a.active {
       color: #fff;
-      font-weight: bold;
-      border-bottom: 2px solid #4caf50;
-      padding-bottom: 2px;
+      font-weight: 600;
+      background-color: var(--primary-color);
     }
 
+    /* 言語切り替えボタン */
+    .lang-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 2px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .hero-section {
+      margin-bottom: 24px;
+    }
     h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--text-main);
     }
     .subtitle {
-      color: #666;
-      font-size: 14px;
-      margin-top: 0;
-      margin-bottom: 20px;
+      color: var(--text-muted);
+      font-size: 15px;
+      margin: 0;
     }
 
-    /* カウンター表示グリッド */
-    .counter-grid {
+    /* カウント結果ダッシュボード */
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
     }
-    .card {
-      background-color: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 6px;
-      padding: 15px;
-      text-align: center;
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .card-title {
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .stat-card.main-stat {
+      border-color: var(--primary-color);
+      background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+    }
+    .stat-label {
       font-size: 13px;
-      color: #6c757d;
-      margin-bottom: 5px;
-      font-weight: bold;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
     }
-    .card-value {
+    .stat-value {
       font-size: 28px;
-      font-weight: bold;
-      color: #212529;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
     }
-    .card-unit {
-      font-size: 14px;
+    .main-stat .stat-value {
+      color: var(--primary-color);
+    }
+    .stat-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
       margin-left: 2px;
+    }
+
+    /* エディタエリア */
+    .editor-box {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 24px;
+    }
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .editor-header label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .btn-clear {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-clear:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
     }
 
     textarea {
       width: 100%;
-      height: 250px;
-      padding: 12px;
+      height: 280px;
+      padding: 16px;
       font-size: 15px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      color: var(--text-main);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
       font-family: inherit;
-      line-height: 1.5;
       resize: vertical;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      line-height: 1.7;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+    textarea::placeholder {
+      color: #94a3b8;
     }
 
-    .button-group {
-      margin-top: 10px;
-      margin-bottom: 25px;
-      text-align: right;
-    }
-    button {
-      padding: 8px 16px;
-      background-color: #f0f0f0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    button:hover {
-      background-color: #e0e0e0;
-    }
-
-    /* セキュリティ・SEO案内用スタイル */
+    /* セキュリティ・SEO案内スタイル */
     .info-card {
       margin-top: 40px;
-      padding: 20px;
-      background-color: #f0f4f8;
-      border-radius: 6px;
+      padding: 20px 24px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
       font-size: 14px;
+      color: #1e40af;
     }
+    .info-card strong {
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .info-card p {
+      margin: 0;
+      color: #1e3a8a;
+    }
+
     .seo-content {
       margin-top: 40px;
-      border-top: 1px solid #eee;
-      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+      color: var(--text-muted);
     }
     .seo-content h2 {
       font-size: 18px;
-      margin-top: 25px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+    .seo-content ul {
+      padding-left: 20px;
+    }
+    .seo-content li {
+      margin-bottom: 8px;
+    }
+    .seo-content strong {
+      color: var(--text-main);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0 12px 30px 12px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
@@ -158,93 +289,199 @@
   <header>
     <nav>
       <span class="logo">Quick Tools</span>
-      <a href="index.html">テキスト比較</a>
-      <a href="word-count.html" class="active">文字数カウント</a>
+      <a href="index.html" id="nav-diff">テキスト比較</a>
+      <a href="word-count.html" class="active" id="nav-word">文字数カウント</a>
     </nav>
+    <div class="lang-switch">
+      <button class="lang-btn" id="lang-ja" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
   </header>
 
-  <h1>文字数カウントツール</h1>
-  <p class="subtitle">テキストを入力するだけで、文字数・原稿用紙枚数・行数をリアルタイムで計測します。</p>
+  <div class="hero-section">
+    <h1 id="title">文字数カウントツール</h1>
+    <p class="subtitle" id="subtitle">入力したテキストの文字数・単語数・行数・原稿用紙換算数をリアルタイムで計測します。</p>
+  </div>
 
-  <!-- カウント結果のカード群 -->
-  <div class="counter-grid">
-    <div class="card">
-      <div class="card-title">文字数（スペース込み）</div>
-      <div class="card-value"><span id="count-total">0</span><span class="card-unit">文字</span></div>
+  <!-- ステータスダッシュボード -->
+  <div class="stats-grid">
+    <div class="stat-card main-stat">
+      <div class="stat-label" id="lbl-char-total">総文字数（スペース含む）</div>
+      <div class="stat-value"><span id="val-char-total">0</span><span class="stat-unit" id="unit-char-1">文字</span></div>
     </div>
-    <div class="card">
-      <div class="card-title">文字数（スペース除く）</div>
-      <div class="card-value"><span id="count-no-space">0</span><span class="card-unit">文字</span></div>
+    <div class="stat-card">
+      <div class="stat-label" id="lbl-char-no-space">文字数（スペース除く）</div>
+      <div class="stat-value"><span id="val-char-no-space">0</span><span class="stat-unit" id="unit-char-2">文字</span></div>
     </div>
-    <div class="card">
-      <div class="card-title">原稿用紙換算（400字）</div>
-      <div class="card-value"><span id="count-manuscript">0</span><span class="card-unit">枚</span></div>
+    <div class="stat-card">
+      <div class="stat-label" id="lbl-words">単語数 (Word Count)</div>
+      <div class="stat-value"><span id="val-words">0</span><span class="stat-unit" id="unit-words">語</span></div>
     </div>
-    <div class="card">
-      <div class="card-title">行数</div>
-      <div class="card-value"><span id="count-lines">0</span><span class="card-unit">行</span></div>
+    <div class="stat-card">
+      <div class="stat-label" id="lbl-lines">行数</div>
+      <div class="stat-value"><span id="val-lines">0</span><span class="stat-unit" id="unit-lines">行</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" id="lbl-manuscript">原稿用紙換算 (400字)</div>
+      <div class="stat-value"><span id="val-manuscript">0</span><span class="stat-unit" id="unit-manuscript">枚</span></div>
     </div>
   </div>
 
   <!-- 入力エリア -->
-  <textarea id="text-input" placeholder="ここに文章を入力または貼り付けてください..."></textarea>
-
-  <div class="button-group">
-    <button id="clear-btn">テキストをクリア</button>
+  <div class="editor-box">
+    <div class="editor-header">
+      <label for="text-input" id="label-input">入力テキスト</label>
+      <button class="btn-clear" onclick="clearText()" id="btn-clear">クリア</button>
+    </div>
+    <textarea id="text-input" placeholder="ここに文章を入力または貼り付けてください..."></textarea>
   </div>
 
   <!-- セキュリティ案内 -->
   <div class="info-card">
-    <strong>🔒 安全なセキュリティ構造</strong>
-    <p style="margin: 5px 0 0 0;">入力されたテキストデータは外部サーバーへ送信されません。すべての計測処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密情報や執筆中の原稿でも安心してご利用いただけます。</p>
+    <strong id="sec-title">🔒 安全なセキュリティ構造</strong>
+    <p id="sec-desc">入力されたテキストデータは外部サーバーへ送信されません。すべてのカウント処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書でも安心してお使いいただけます。</p>
   </div>
 
   <!-- SEO対策コンテンツ -->
   <div class="seo-content">
-    <h2>文字数カウントツールの主な機能</h2>
-    <ul>
-      <li><strong>スペース込み文字数：</strong> 助動詞や記号、空白を含む全体の文字数を算出します。</li>
-      <li><strong>スペース除く文字数：</strong> 半角・全角スペースや改行を除外した純粋な文字数をカウントします。</li>
-      <li><strong>原稿用紙換算枚数：</strong> 一般的な400字詰め原稿用紙（20行×20文字）に換算した枚数を表示します。</li>
-      <li><strong>行数カウント：</strong> 改行コードに基づく全体の行数を計算します。</li>
-    </ul>
-
-    <h2>利用シーン</h2>
-    <ul>
-      <li><strong>レポート・論文の執筆：</strong> 指定文字数制限の確認や原稿用紙換算のチェック。</li>
-      <li><strong>Webライティング・SEO記事制作：</strong> 記事の見出しごとの文字数調整や全体の体裁確認。</li>
-      <li><strong>SNS・広告文作成：</strong> 文字制限のある投稿メッセージの事前チェック。</li>
+    <h2 id="seo-title">文字数カウントツールの特長</h2>
+    <ul id="seo-list">
+      <li><strong>リアルタイム計測：</strong> キーボード入力やテキストの貼り付けと同時に、瞬時に文字数を計算します。</li>
+      <li><strong>多角的な分析：</strong> スペース有無での文字数比較や英文の単語数、原稿用紙枚数もひと目で把握できます。</li>
+      <li><strong>完全無料・登録不要：</strong> 面倒な会員登録や設定は一切不要で、すぐに利用できます。</li>
     </ul>
   </div>
 
   <script>
     const textInput = document.getElementById('text-input');
-    const countTotal = document.getElementById('count-total');
-    const countNoSpace = document.getElementById('count-no-space');
-    const countManuscript = document.getElementById('count-manuscript');
-    const countLines = document.getElementById('count-lines');
-    const clearBtn = document.getElementById('clear-btn');
+    let currentLang = 'ja';
 
-    function updateCounts() {
-      const text = textInput.value;
+    // 翻訳辞書
+    const i18n = {
+      ja: {
+        navDiff: 'テキスト比較',
+        navWord: '文字数カウント',
+        title: '文字数カウントツール',
+        subtitle: '入力したテキストの文字数・単語数・行数・原稿用紙換算数をリアルタイムで計測します。',
+        labelInput: '入力テキスト',
+        placeholder: 'ここに文章を入力または貼り付けてください...',
+        clearBtn: 'クリア',
+        lblCharTotal: '総文字数（スペース含む）',
+        lblCharNoSpace: '文字数（スペース除く）',
+        lblWords: '単語数 (Word Count)',
+        lblLines: '行数',
+        lblManuscript: '原稿用紙換算 (400字)',
+        unitChar: '文字',
+        unitWords: '語',
+        unitLines: '行',
+        unitManuscript: '枚',
+        secTitle: '🔒 安全なセキュリティ構造',
+        secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべてのカウント処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書でも安心してお使いいただけます。',
+        seoTitle: '文字数カウントツールの特長',
+        seoList: `
+          <li><strong>リアルタイム計測：</strong> キーボード入力やテキストの貼り付けと同時に、瞬時に文字数を計算します。</li>
+          <li><strong>多角的な分析：</strong> スペース有無での文字数比較や英文の単語数、原稿用紙枚数もひと目で把握できます。</li>
+          <li><strong>完全無料・登録不要：</strong> 面倒な会員登録や設定は一切不要で、すぐに利用できます。</li>
+        `
+      },
+      en: {
+        navDiff: 'Text Diff',
+        navWord: 'Word Count',
+        title: 'Word & Character Counter',
+        subtitle: 'Real-time calculation of character count, word count, lines, and manuscript pages.',
+        labelInput: 'Input Text',
+        placeholder: 'Type or paste your text here...',
+        clearBtn: 'Clear',
+        lblCharTotal: 'Total Characters (with spaces)',
+        lblCharNoSpace: 'Characters (no spaces)',
+        lblWords: 'Word Count',
+        lblLines: 'Lines',
+        lblManuscript: 'Manuscript Pages (400 chars)',
+        unitChar: 'chars',
+        unitWords: 'words',
+        unitLines: 'lines',
+        unitManuscript: 'pages',
+        secTitle: '🔒 Safe & Secure',
+        secDesc: 'Your text data is never sent to any external servers. All calculation is performed entirely within your browser (client-side).',
+        seoTitle: 'Features of Word & Character Counter',
+        seoList: `
+          <li><strong>Real-time Counting:</strong> Calculates characters and words instantly as you type or paste.</li>
+          <li><strong>Detailed Breakdown:</strong> Track characters with/without spaces, words, lines, and standard page counts.</li>
+          <li><strong>100% Free & No Sign-up:</strong> No registration required. Ready to use immediately.</li>
+        `
+      }
+    };
 
-      const totalChars = text.length;
-      const noSpaceChars = text.replace(/\s/g, '').length;
-      const manuscriptPages = text === '' ? 0 : (totalChars / 400).toFixed(1);
-      const lines = text === '' ? 0 : text.split('\n').length;
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
 
-      countTotal.textContent = totalChars.toLocaleString();
-      countNoSpace.textContent = noSpaceChars.toLocaleString();
-      countManuscript.textContent = manuscriptPages;
-      countLines.textContent = lines.toLocaleString();
+      document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
+      document.getElementById('nav-word').textContent = i18n[lang].navWord;
+      document.getElementById('title').textContent = i18n[lang].title;
+      document.getElementById('subtitle').textContent = i18n[lang].subtitle;
+      document.getElementById('label-input').textContent = i18n[lang].labelInput;
+      textInput.placeholder = i18n[lang].placeholder;
+      document.getElementById('btn-clear').textContent = i18n[lang].clearBtn;
+
+      document.getElementById('lbl-char-total').textContent = i18n[lang].lblCharTotal;
+      document.getElementById('lbl-char-no-space').textContent = i18n[lang].lblCharNoSpace;
+      document.getElementById('lbl-words').textContent = i18n[lang].lblWords;
+      document.getElementById('lbl-lines').textContent = i18n[lang].lblLines;
+      document.getElementById('lbl-manuscript').textContent = i18n[lang].lblManuscript;
+
+      document.getElementById('unit-char-1').textContent = i18n[lang].unitChar;
+      document.getElementById('unit-char-2').textContent = i18n[lang].unitChar;
+      document.getElementById('unit-words').textContent = i18n[lang].unitWords;
+      document.getElementById('unit-lines').textContent = i18n[lang].unitLines;
+      document.getElementById('unit-manuscript').textContent = i18n[lang].unitManuscript;
+
+      document.getElementById('sec-title').textContent = i18n[lang].secTitle;
+      document.getElementById('sec-desc').textContent = i18n[lang].secDesc;
+      document.getElementById('seo-title').textContent = i18n[lang].seoTitle;
+      document.getElementById('seo-list').innerHTML = i18n[lang].seoList;
+
+      updateCount();
     }
 
-    textInput.addEventListener('input', updateCounts);
-
-    clearBtn.addEventListener('click', () => {
+    function clearText() {
       textInput.value = '';
-      updateCounts();
-    });
+      updateCount();
+    }
+
+    function updateCount() {
+      const text = textInput.value;
+
+      // 総文字数（改行含む）
+      const totalChars = text.length;
+
+      // 空白・改行を除く文字数
+      const noSpaceChars = text.replace(/[\s\u3000]/g, '').length;
+
+      // 単語数（連続した空白で区切られた単語）
+      const trimmed = text.trim();
+      const words = trimmed ? trimmed.split(/[\s\u3000]+/).length : 0;
+
+      // 行数
+      const lines = text ? text.split('\n').length : 0;
+
+      // 原稿用紙（400文字換算）
+      const manuscript = Math.ceil(totalChars / 400);
+
+      // 画面描画
+      document.getElementById('val-char-total').textContent = totalChars.toLocaleString();
+      document.getElementById('val-char-no-space').textContent = noSpaceChars.toLocaleString();
+      document.getElementById('val-words').textContent = words.toLocaleString();
+      document.getElementById('val-lines').textContent = lines.toLocaleString();
+      document.getElementById('val-manuscript').textContent = manuscript.toLocaleString();
+    }
+
+    textInput.addEventListener('input', updateCount);
+
+    // 初期化
+    setLanguage('ja');
   </script>
 
 </body>
