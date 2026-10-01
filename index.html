@@ -132,7 +132,7 @@
     del {
       background-color: #ffebe9;
       color: #cf222e;
-      text-decoration: line-through;
+      text-decoration: none; /* 取り消し線を削除 */
       padding: 2px 4px;
       border-radius: 2px;
     }
@@ -252,9 +252,9 @@
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
 
-        if (op === -1) { // 削除 (Text A にのみ赤表示)
+        if (op === -1) { // 削除 (Text A にのみ赤背景で表示)
           htmlOld += `<del>${text}</del>`;
-        } else if (op === 1) { // 追加 (Text B にのみ緑表示)
+        } else if (op === 1) { // 追加 (Text B にのみ緑背景で表示)
           htmlNew += `<ins>${text}</ins>`;
         } else { // 共通部分 (両方に表示)
           htmlOld += text;
