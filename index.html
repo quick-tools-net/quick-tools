@@ -209,37 +209,34 @@
       padding: 16px;
       min-height: 180px;
       white-space: pre-wrap;
-      overflow-wrap: anywhere; /* 長い単語・連続空白も確実に枠内で折り返す */
-      word-break: break-word;
+      word-break: break-all; /* 日本語や記号も自然に右端で折返す */
+      overflow-wrap: break-word;
       font-size: 14px;
       line-height: 1.8;
       color: #334155;
-      overflow: hidden; /* はみ出しを完全にシャットアウト */
     }
     .result-placeholder {
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾 */
+    /* 差分ハイライトの装飾（右端の余白を侵食しないように修正） */
     ins {
       background-color: var(--add-bg);
       color: var(--add-text);
       text-decoration: none;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 1px 4px;
+      border-radius: 3px;
       font-weight: 600;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone; /* 複数行に折り返した際も綺麗に背景色を付与 */
+      display: inline;
     }
     del {
       background-color: var(--del-bg);
       color: var(--del-text);
       text-decoration: none;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 1px 4px;
+      border-radius: 3px;
       font-weight: 600;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
+      display: inline;
     }
 
     /* セキュリティ・SEO案内スタイル */
