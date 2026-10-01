@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【無料】ポモドーロタイマー - 集中力を高めるタイムマネジメント | Quick Tools</title>
+  <meta name="description" content="25分間の集中と5分間の休憩を繰り返す無料のポモドーロタイマーです。アラーム音機能・カウント自動切り替え機能付き。ブラウザ上で動作しダウンロード不要です。">
+  
+  <style>
+    :root {
+      --primary-color: #0284c7;     /* オーシャンブルー */
+      --primary-hover: #0369a1;
+      --primary-light: #f0f9ff;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --result-bg: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --break-color: #10b981;     /* 休憩時のテーマカラー（グリーン） */
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 共通ヘッダーナビゲーション */
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      padding: 14px 24px;
+      border-radius: 12px;
+      margin: 20px 0 30px 0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      margin-right: 10px;
+    }
+    nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    nav a:hover {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    nav a.active {
+      color: #fff;
+      font-weight: 600;
+      background-color: var(--primary-color);
+    }
+
+    /* 言語切り替えボタン */
+    .lang-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 2px;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .hero-section {
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* タイマーメインコンテンツ */
+    .timer-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      margin-bottom: 24px;
+      transition: border-color 0.3s ease;
+    }
+    .timer-container.break-mode {
+      border-color: var(--break-color);
+    }
+
+    /* タブ切り替え（作業 / 休憩） */
+    .mode-tabs {
+      display: inline-flex;
+      background: var(--result-bg);
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+    .tab-btn {
+      border: none;
+      background: none;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .tab-btn.active.break-tab {
+      color: var(--break-color);
+    }
+
+    /* デジタル時計表示 */
+    .timer-display {
+      font-size: 80px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      line-height: 1;
+    }
+
+    /* 操作ボタン */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-main {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 12px 36px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2);
+    }
+    .btn-main:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-main.break-btn {
+      background: var(--break-color);
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    }
+    .btn-main.break-btn:hover {
+      background: #059669;
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    /* 達成カウント表示 */
+    .session-counter {
+      margin-top: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .session-counter strong {
+      color: var(--primary-color);
+      font-size: 18px;
+    }
+
+    /* セキュリティ・SEO案内スタイル */
+    .info-card {
+      margin-top: 40px;
+      padding: 20px 24px;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #0369a1;
+    }
+    .info-card strong {
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .info-card p {
+      margin: 0;
+      color: #0c4a6e;
+    }
+
+    .seo-content {
+      margin-top: 40px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+      color: var(--text-muted);
+    }
+    .seo-content h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+    .seo-content ul {
+      padding-left: 20px;
+    }
+    .seo-content li {
+      margin-bottom: 8px;
+    }
+    .seo-content strong {
+      color: var(--text-main);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0 12px 30px 12px;
+      }
+      .timer-display {
+        font-size: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 共通ヘッダー -->
+  <header>
+    <nav>
+      <span class="logo">Quick Tools</span>
+      <a href="index.html" id="nav-diff">テキスト比較</a>
+      <a href="word-count.html" id="nav-word">文字数カウント</a>
+      <a href="pomodoro.html" class="active" id="nav-pomo">ポモドーロ</a>
+    </nav>
+    <div class="lang-switch">
+      <button class="lang-btn" id="lang-ja" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
+  </header>
+
+  <div class="hero-section">
+    <h1 id="title">ポモドーロタイマー</h1>
+    <p class="subtitle" id="subtitle">25分間の集中と5分間の休憩を繰り返し、作業効率と集中力を最大化します。</p>
+  </div>
+
+  <!-- タイマーカード -->
+  <div class="timer-container" id="timer-box">
+    <div class="mode-tabs">
+      <button class="tab-btn active" id="tab-work" onclick="switchMode('work')">作業 (25分)</button>
+      <button class="tab-btn" id="tab-break" onclick="switchMode('break')">休憩 (5分)</button>
+    </div>
+
+    <div class="timer-display" id="time-display">25:00</div>
+
+    <div class="controls">
+      <button class="btn-main" id="btn-start" onclick="toggleTimer()">スタート</button>
+      <button class="btn-secondary" id="btn-reset" onclick="resetTimer()">リセット</button>
+    </div>
+
+    <div class="session-counter" id="session-box">
+      本日の完了セッション: <strong id="session-count">0</strong> 回
+    </div>
+  </div>
+
+  <!-- セキュリティ・機能案内 -->
+  <div class="info-card">
+    <strong id="sec-title">🔔 アラーム音とバックグラウンド動作</strong>
+    <p id="sec-desc">タイマー終了時には通知音が鳴り、ページのタブタイトルにも残り時間が表示されるため、別タブで作業を行っていても時間を逃しません。</p>
+  </div>
+
+  <!-- SEO対策コンテンツ -->
+  <div class="seo-content">
+    <h2 id="seo-title">ポモドーロ・テクニックとは？</h2>
+    <ul id="seo-list">
+      <li><strong>25分集中＋5分休憩：</strong> 短い集中と小休憩をセットにすることで、脳の疲労を防ぎ持続的な集中力を維持します。</li>
+      <li><strong>モチベーション維持：</strong> タスクを細分化し「25分間だけ集中する」目標を作ることで、着手への心理的ハードルを下げます。</li>
+      <li><strong>無料＆ダウンロード不要：</strong> ブラウザを開くだけで即座に使用でき、作業実績もカウントされます。</li>
+    </ul>
+  </div>
+
+  <script>
+    let currentMode = 'work'; // 'work' | 'break'
+    let timeLeft = 25 * 60;
+    let timerInterval = null;
+    let isRunning = false;
+    let completedSessions = 0;
+    let currentLang = 'ja';
+
+    const WORK_TIME = 25 * 60;
+    const BREAK_TIME = 5 * 60;
+
+    const timeDisplay = document.getElementById('time-display');
+    const btnStart = document.getElementById('btn-start');
+    const tabWork = document.getElementById('tab-work');
+    const tabBreak = document.getElementById('tab-break');
+    const timerBox = document.getElementById('timer-box');
+
+    // 翻訳辞書
+    const i18n = {
+      ja: {
+        navDiff: 'テキスト比較',
+        navWord: '文字数カウント',
+        navPomo: 'ポモドーロ',
+        title: 'ポモドーロタイマー',
+        subtitle: '25分間の集中と5分間の休憩を繰り返し、作業効率と集中力を最大化します。',
+        tabWork: '作業 (25分)',
+        tabBreak: '休憩 (5分)',
+        btnStart: 'スタート',
+        btnPause: '一時停止',
+        btnReset: 'リセット',
+        sessionLabel: '本日の完了セッション: ',
+        sessionUnit: ' 回',
+        secTitle: '🔔 アラーム音とバックグラウンド動作',
+        secDesc: 'タイマー終了時には通知音が鳴り、ページのタブタイトルにも残り時間が表示されるため、別タブで作業を行っていても時間を逃しません。',
+        seoTitle: 'ポモドーロ・テクニックとは？',
+        seoList: `
+          <li><strong>25分集中＋5分休憩：</strong> 短い集中と小休憩をセットにすることで、脳の疲労を防ぎ持続的な集中力を維持します。</li>
+          <li><strong>モチベーション維持：</strong> タスクを細分化し「25分間だけ集中する」目標を作ることで、着手への心理的ハードルを下げます。</li>
+          <li><strong>無料＆ダウンロード不要：</strong> ブラウザを開くだけで即座に使用でき、作業実績もカウントされます。</li>
+        `
+      },
+      en: {
+        navDiff: 'Text Diff',
+        navWord: 'Word Count',
+        navPomo: 'Pomodoro',
+        title: 'Pomodoro Timer',
+        subtitle: 'Maximize productivity and focus with 25-minute work intervals and 5-minute breaks.',
+        tabWork: 'Work (25m)',
+        tabBreak: 'Break (5m)',
+        btnStart: 'Start',
+        btnPause: 'Pause',
+        btnReset: 'Reset',
+        sessionLabel: 'Completed Sessions Today: ',
+        sessionUnit: '',
+        secTitle: '🔔 Audio Alert & Tab Status',
+        secDesc: 'A notification sound plays when time is up, and remaining time is shown in the browser tab title.',
+        seoTitle: 'What is the Pomodoro Technique?',
+        seoList: `
+          <li><strong>25m Focus + 5m Break:</strong> Alternating work and breaks prevents mental fatigue and sustains focus.</li>
+          <li><strong>Boost Productivity:</strong> Breaking tasks into 25-minute chunks lowers starting friction.</li>
+          <li><strong>100% Free & No Download:</strong> Runs directly in your browser with session tracking.</li>
+        `
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+      document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
+      document.getElementById('nav-word').textContent = i18n[lang].navWord;
+      document.getElementById('nav-pomo').textContent = i18n[lang].navPomo;
+      document.getElementById('title').textContent = i18n[lang].title;
+      document.getElementById('subtitle').textContent = i18n[lang].subtitle;
+
+      tabWork.textContent = i18n[lang].tabWork;
+      tabBreak.textContent = i18n[lang].tabBreak;
+      btnStart.textContent = isRunning ? i18n[lang].btnPause : i18n[lang].btnStart;
+      document.getElementById('btn-reset').textContent = i18n[lang].btnReset;
+
+      document.getElementById('session-box').childNodes[0].textContent = i18n[lang].sessionLabel;
+      document.getElementById('sec-title').textContent = i18n[lang].secTitle;
+      document.getElementById('sec-desc').textContent = i18n[lang].secDesc;
+      document.getElementById('seo-title').textContent = i18n[lang].seoTitle;
+      document.getElementById('seo-list').innerHTML = i18n[lang].seoList;
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateDisplay() {
+      const formatted = formatTime(timeLeft);
+      timeDisplay.textContent = formatted;
+      const modeLabel = currentMode === 'work' ? '集中' : '休憩';
+      document.title = `(${formatted}) ${modeLabel} - Pomodoro | Quick Tools`;
+    }
+
+    function switchMode(mode) {
+      if (isRunning) pauseTimer();
+      currentMode = mode;
+      
+      if (mode === 'work') {
+        timeLeft = WORK_TIME;
+        tabWork.classList.add('active');
+        tabBreak.classList.remove('active', 'break-tab');
+        btnStart.classList.remove('break-btn');
+        timerBox.classList.remove('break-mode');
+      } else {
+        timeLeft = BREAK_TIME;
+        tabBreak.classList.add('active', 'break-tab');
+        tabWork.classList.remove('active');
+        btnStart.classList.add('break-btn');
+        timerBox.classList.add('break-mode');
+      }
+      updateDisplay();
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      isRunning = true;
+      btnStart.textContent = i18n[currentLang].btnPause;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateDisplay();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          isRunning = false;
+          playAlertSound();
+
+          if (currentMode === 'work') {
+            completedSessions++;
+            document.getElementById('session-count').textContent = completedSessions;
+            switchMode('break');
+          } else {
+            switchMode('work');
+          }
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      clearInterval(timerInterval);
+      btnStart.textContent = i18n[currentLang].btnStart;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timeLeft = (currentMode === 'work') ? WORK_TIME : BREAK_TIME;
+      updateDisplay();
+    }
+
+    // Web Audio API による終了アラーム音生成
+    function playAlertSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      } catch (e) {
+        // AudioContextが制限されている場合はスキップ
+      }
+    }
+
+    // 初期化
+    setLanguage('ja');
+    updateDisplay();
+  </script>
+
+</body>
+</html>
