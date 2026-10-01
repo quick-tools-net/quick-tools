@@ -18,8 +18,9 @@
   
   <style>
     :root {
-      --primary-color: #4f46e5;
-      --primary-hover: #4338ca;
+      --primary-color: #10b981;     /* エメラルドグリーン */
+      --primary-hover: #059669;
+      --primary-light: #ecfdf5;    /* カードの背景用グラデーション等 */
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --result-bg: #f1f5f9;
@@ -146,7 +147,7 @@
     }
     .stat-card.main-stat {
       border-color: var(--primary-color);
-      background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+      background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 100%);
     }
     .stat-label {
       font-size: 13px;
@@ -161,7 +162,7 @@
       line-height: 1.2;
     }
     .main-stat .stat-value {
-      color: var(--primary-color);
+      color: var(--primary-hover);
     }
     .stat-unit {
       font-size: 13px;
@@ -222,7 +223,7 @@
     textarea:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
     }
     textarea::placeholder {
       color: #94a3b8;
@@ -232,11 +233,11 @@
     .info-card {
       margin-top: 40px;
       padding: 20px 24px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
       border-radius: 12px;
       font-size: 14px;
-      color: #1e40af;
+      color: #166534;
     }
     .info-card strong {
       font-size: 15px;
@@ -247,7 +248,7 @@
     }
     .info-card p {
       margin: 0;
-      color: #1e3a8a;
+      color: #14532d;
     }
 
     .seo-content {
