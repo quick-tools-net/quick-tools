@@ -210,24 +210,25 @@
       padding: 16px;
       min-height: 180px;
       white-space: pre-wrap;
-      word-break: break-all;
+      word-break: break-word;
       overflow-wrap: anywhere;
       font-size: 14px;
-      line-height: 2.2; /* 行間を十分広げて上下が離れるように設定 */
+      line-height: 2.2;
       color: #334155;
-      overflow: hidden;
     }
     .result-placeholder {
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾（上下のくっつき＆上方向への突き抜けを防止） */
+    /* 差分ハイライトの装飾（行末の余白保護と連続折り返しの制御） */
     ins, del {
       text-decoration: none;
       padding: 2px 3px;
       border-radius: 3px;
       font-weight: 600;
       display: inline;
+      word-break: break-word;
+      overflow-wrap: anywhere;
       box-decoration-break: clone;
       -webkit-box-decoration-break: clone;
     }
@@ -512,7 +513,7 @@
         resultNew.innerHTML = htmlNew || `<span class="result-placeholder">${i18n[currentLang].noText}</span>`;
       }
 
-      // ユーザー入力の場合、少しタイピングが落ち着いてから履歴に追加（連続連打対策）
+      // ユーザー入力の場合、少しタイピングが落ち着いてから履歴に追加
       if (isUserInteraction && !isInternalUpdate) {
         clearTimeout(historyTimer);
         historyTimer = setTimeout(() => {
