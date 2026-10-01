@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -220,15 +220,15 @@
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾（1文字単位で独立表示） */
+    /* 差分ハイライトの装飾 */
     ins, del {
       text-decoration: none;
-      padding: 1px 3px;
+      padding: 2px 3px;
       border-radius: 3px;
       font-weight: 600;
-      display: inline-block;
-      margin: 0 1px;
-      vertical-align: baseline;
+      display: inline;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
     ins {
       background-color: var(--add-bg);
@@ -237,6 +237,19 @@
     del {
       background-color: var(--del-bg);
       color: var(--del-text);
+    }
+
+    /* 空白専用ハイライト：複数スペースがあっても1文字分の見た目に固定 */
+    ins.space-highlight, del.space-highlight {
+      display: inline-block;
+      width: 0.7em;
+      height: 1.3em;
+      padding: 0;
+      margin: 0 1px;
+      vertical-align: middle;
+      overflow: hidden;
+      white-space: nowrap;
+      text-indent: -9999px; /* 内側の長いスペーステキストを隠す */
     }
 
     /* セキュリティ・SEO案内スタイル */
@@ -479,26 +492,25 @@
         .replace(/>/g, '&gt;');
     }
 
-    // 差分テキストをHTML化する処理（スペースや改行を1文字ずつの要素に分解）
+    // 差分テキストのレンダリング処理
     function renderDiffHtml(diffText, tagName) {
       const safeText = escapeHtml(diffText);
-      const openTag = tagName ? `<${tagName}>` : '';
-      const closeTag = tagName ? `</${tagName}>` : '';
 
-      let resultHtml = '';
-      for (let i = 0; i < safeText.length; i++) {
-        const char = safeText[i];
-        if (char === ' ') {
-          resultHtml += `${openTag}&nbsp;${closeTag}&#8203;`;
-        } else if (char === ' ') {
-          resultHtml += `${openTag} ${closeTag}&#8203;`;
-        } else if (char === '\n') {
-          resultHtml += `${openTag}&nbsp;${closeTag}<br>`;
-        } else {
-          resultHtml += `${openTag}${char}${closeTag}`;
-        }
+      // 差分がない部分はそのまま表示
+      if (!tagName) {
+        return safeText;
       }
-      return resultHtml;
+
+      // 差分が「すべて空白（半角・全角スペースまたは改行）」のみで構成されているか判定
+      const isOnlySpaces = /^[\s\u3000]+$/.test(diffText);
+
+      if (isOnlySpaces) {
+        // 空白のみの差分の場合は、幅を「空白1つ分」に固定した1つのハイライト枠で表示
+        return `<${tagName} class="space-highlight">&nbsp;</${tagName}>`;
+      } else {
+        // 文字を含む通常の差分の場合は、これまで通り1つの連続したハイライト枠で表示
+        return `<${tagName}>${safeText}</${tagName}>`;
+      }
     }
 
     function compareText(isUserInteraction = true) {
