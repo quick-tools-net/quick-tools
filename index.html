@@ -203,40 +203,47 @@
       margin-bottom: 12px;
     }
     .result-box {
+      position: relative;
       background-color: var(--result-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 16px;
       min-height: 180px;
       white-space: pre-wrap;
-      word-break: break-all; /* 日本語や記号も自然に右端で折返す */
-      overflow-wrap: break-word;
+      word-break: break-all;
+      overflow-wrap: anywhere;
       font-size: 14px;
       line-height: 1.8;
       color: #334155;
+      /* 枠外へのハイライト突き抜け防止 */
+      overflow: hidden;
     }
     .result-placeholder {
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾（右端の余白を侵食しないように修正） */
+    /* 差分ハイライトの装飾（親要素の幅を超えない設定） */
     ins {
       background-color: var(--add-bg);
       color: var(--add-text);
       text-decoration: none;
-      padding: 1px 4px;
+      padding: 1px 2px;
       border-radius: 3px;
       font-weight: 600;
-      display: inline;
+      max-width: 100%;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
     del {
       background-color: var(--del-bg);
       color: var(--del-text);
       text-decoration: none;
-      padding: 1px 4px;
+      padding: 1px 2px;
       border-radius: 3px;
       font-weight: 600;
-      display: inline;
+      max-width: 100%;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
 
     /* セキュリティ・SEO案内スタイル */
