@@ -215,35 +215,31 @@
       font-size: 14px;
       line-height: 1.8;
       color: #334155;
-      /* 枠外へのハイライト突き抜け防止 */
-      overflow: hidden;
     }
     .result-placeholder {
       color: #94a3b8;
     }
 
-    /* 差分ハイライトの装飾（親要素の幅を超えない設定） */
+    /* 差分ハイライトの装飾（パディング領域を守る指定） */
+    ins, del {
+      text-decoration: none;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 600;
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: bottom;
+      overflow-wrap: break-word;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
     ins {
       background-color: var(--add-bg);
       color: var(--add-text);
-      text-decoration: none;
-      padding: 1px 2px;
-      border-radius: 3px;
-      font-weight: 600;
-      max-width: 100%;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
     }
     del {
       background-color: var(--del-bg);
       color: var(--del-text);
-      text-decoration: none;
-      padding: 1px 2px;
-      border-radius: 3px;
-      font-weight: 600;
-      max-width: 100%;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
     }
 
     /* セキュリティ・SEO案内スタイル */
