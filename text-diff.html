@@ -8,7 +8,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-Z9PXF3MLDH');
   </script>
 
   <meta charset="UTF-8">
@@ -16,14 +16,10 @@
   <title>【無料】テキスト差分比較ツール - ブラウザで簡単文章チェック | Quick Tools</title>
   <meta name="description" content="2つのテキストの差分（変更点・追加・削除）を左右分割でハイライト表示する無料Webツールです。データはサーバーに送信されず安全です。">
 
-    <!-- -------------------------------------------------- -->
-  <!-- 👇 ここから：Google AdSense 審査用コード（貼り付け箇所） -->
+  <!-- Google AdSense 審査用コード -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5528416263110291"
      crossorigin="anonymous"></script>
-  <!-- 👆 ここまで ---------------------------------------- -->
 
-  <!-- 以下は元からあるCSSやスクリプト等 -->
-  
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -147,7 +143,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-width: 0; /* はみ出し防止対策 */
+      min-width: 0;
     }
     .column-header {
       display: flex;
@@ -247,7 +243,7 @@
       color: var(--del-text);
     }
 
-    /* 空白専用ハイライト：複数スペースがあっても1文字分の見た目に固定 */
+    /* 空白専用ハイライト */
     ins.space-highlight, del.space-highlight {
       display: inline-block;
       width: 0.7em;
@@ -257,7 +253,7 @@
       vertical-align: middle;
       overflow: hidden;
       white-space: nowrap;
-      text-indent: -9999px; /* 内側の長いスペーステキストを隠す */
+      text-indent: -9999px;
     }
 
     /* セキュリティ・SEO案内スタイル */
@@ -322,17 +318,17 @@
 <body>
 
   <!-- 共通ヘッダー -->
- <header>
+  <header>
     <nav>
       <a href="index.html" class="logo">Quick Tools</a>
-      <a href="text-diff.html" class="active">テキスト比較</a>
-      <a href="word-count.html">文字数カウント</a>
-      <a href="pomodoro.html">ポモドーロ</a>
+      <a href="text-diff.html" class="active" id="nav-diff">テキスト比較</a>
+      <a href="word-count.html" id="nav-word">文字数カウント</a>
+      <a href="pomodoro.html" id="nav-pomo">ポモドーロ</a>
     </nav>
     <div class="lang-switch">
-  <button class="lang-btn active" id="lang-ja" onclick="setLanguage('ja')">JP</button>
-  <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
-</div>
+      <button class="lang-btn active" id="lang-ja" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
   </header>
 
   <div class="hero-section">
@@ -398,120 +394,97 @@
     let historyTimer = null;
     let isInternalUpdate = false;
 
-    // 翻訳辞書（ポモドーロ用のナビキーを追加）
-const i18n = {
-  ja: {
-    navDiff: 'テキスト比較',
-    navWord: '文字数カウント',
-    navPomo: 'ポモドーロ', // 👈 追加
-    title: 'テキスト差分比較ツール',
-    subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
-    placeholderA: 'Text A を入力してください...',
-    placeholderB: 'Text B を入力してください...',
-    clearBtn: 'クリア',
-    resultTitle: '比較結果',
-    resultPlaceholderA: 'テキストを入力すると、ここに Text A の比較が表示されます。',
-    resultPlaceholderB: 'テキストを入力すると、ここに Text B の比較が表示されます。',
-    noText: '（テキストなし）',
-    secTitle: '🔒 安全なセキュリティ構造',
-    secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。',
-    seoTitle: 'テキスト差分比較ツールの特長',
-    seoList: `
-      <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
-      <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
-      <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
-    `
-  },
-  en: {
-    navDiff: 'Text Diff',
-    navWord: 'Word Count',
-    navPomo: 'Pomodoro', // 👈 追加
-    title: 'Text Diff Checker',
-    subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
-    placeholderA: 'Enter Text A here...',
-    placeholderB: 'Enter Text B here...',
-    clearBtn: 'Clear',
-    resultTitle: 'Comparison Result',
-    resultPlaceholderA: 'Enter text above to see comparison for Text A.',
-    resultPlaceholderB: 'Enter text above to see comparison for Text B.',
-    noText: '(No text)',
-    secTitle: '🔒 Safe & Secure',
-    secDesc: 'Your text data is never sent to any external servers. All comparison processing is performed entirely within your browser (client-side), making it safe for confidential documents.',
-    seoTitle: 'Features of Text Diff Checker',
-    seoList: `
-      <li><strong>Side-by-Side View:</strong> Easily spot changes with a clear split-screen comparison.</li>
-      <li><strong>Real-time Comparison:</strong> Differences are calculated instantly as you type or paste.</li>
-      <li><strong>100% Free & No Sign-up:</strong> No registration or installation required. Use it immediately.</li>
-    `
-  }
-};
+    // 翻訳辞書
+    const i18n = {
+      ja: {
+        navDiff: 'テキスト比較',
+        navWord: '文字数カウント',
+        navPomo: 'ポモドーロ',
+        title: 'テキスト差分比較ツール',
+        subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
+        placeholderA: 'Text A を入力してください...',
+        placeholderB: 'Text B を入力してください...',
+        clearBtn: 'クリア',
+        resultTitle: '比較結果',
+        resultPlaceholderA: 'テキストを入力すると、ここに Text A の比較が表示されます。',
+        resultPlaceholderB: 'テキストを入力すると、ここに Text B の比較が表示されます。',
+        noText: '（テキストなし）',
+        secTitle: '🔒 安全なセキュリティ構造',
+        secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。',
+        seoTitle: 'テキスト差分比較ツールの特長',
+        seoList: `
+          <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
+          <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
+          <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
+        `
+      },
+      en: {
+        navDiff: 'Text Diff',
+        navWord: 'Word Count',
+        navPomo: 'Pomodoro',
+        title: 'Text Diff Checker',
+        subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
+        placeholderA: 'Enter Text A here...',
+        placeholderB: 'Enter Text B here...',
+        clearBtn: 'Clear',
+        resultTitle: 'Comparison Result',
+        resultPlaceholderA: 'Enter text above to see comparison for Text A.',
+        resultPlaceholderB: 'Enter text above to see comparison for Text B.',
+        noText: '(No text)',
+        secTitle: '🔒 Safe & Secure',
+        secDesc: 'Your text data is never sent to any external servers. All comparison processing is performed entirely within your browser (client-side), making it safe for confidential documents.',
+        seoTitle: 'Features of Text Diff Checker',
+        seoList: `
+          <li><strong>Side-by-Side View:</strong> Easily spot changes with a clear split-screen comparison.</li>
+          <li><strong>Real-time Comparison:</strong> Differences are calculated instantly as you type or paste.</li>
+          <li><strong>100% Free & No Sign-up:</strong> No registration or installation required. Use it immediately.</li>
+        `
+      }
+    };
 
-let currentLang = 'ja';
+    function setLanguage(lang) {
+      currentLang = lang;
+      const t = i18n[lang];
+      if (!t) return;
 
-function setLanguage(lang) {
-  currentLang = lang;
-  const t = i18n[lang];
-  if (!t) return;
+      // 1. ボタンのアクティブ状態切り替え
+      const btnJa = document.getElementById('lang-ja');
+      const btnEn = document.getElementById('lang-en');
+      if (btnJa) btnJa.classList.toggle('active', lang === 'ja');
+      if (btnEn) btnEn.classList.toggle('active', lang === 'en');
 
-  // 1. ボタンのアクティブ状態切り替え
-  const btnJa = document.getElementById('lang-ja');
-  const btnEn = document.getElementById('lang-en');
-  if (btnJa) btnJa.classList.toggle('active', lang === 'ja');
-  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+      // 2. 要素書き換えヘルパー関数
+      const updateText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
 
-  // 2. 要素が存在するときだけ文字を書き換える安全ヘルパー関数
-  const updateText = (id, text) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  };
+      const updateHTML = (id, html) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+      };
 
-  const updateHTML = (id, html) => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = html;
-  };
+      // 3. ナビゲーションの切り替え
+      updateText('nav-diff', t.navDiff);
+      updateText('nav-word', t.navWord);
+      updateText('nav-pomo', t.navPomo);
 
-  // 3. ナビゲーションの切り替え
-  updateText('nav-diff', t.navDiff);
-  updateText('nav-word', t.navWord);
-  updateText('nav-pomo', t.navPomo);
+      // 4. ページ内テキストの切り替え
+      updateText('title', t.title);
+      updateText('subtitle', t.subtitle);
+      updateText('btn-clear-a', t.clearBtn);
+      updateText('btn-clear-b', t.clearBtn);
+      updateText('result-title', t.resultTitle);
+      updateText('sec-title', t.secTitle);
+      updateText('sec-desc', t.secDesc);
+      updateText('seo-title', t.seoTitle);
+      updateHTML('seo-list', t.seoList);
 
-  // 4. ページ内テキストの切り替え
-  updateText('title', t.title);
-  updateText('subtitle', t.subtitle);
-  updateText('clear-btn', t.clearBtn);
-  updateText('result-title', t.resultTitle);
-  updateText('sec-title', t.secTitle);
-  updateText('sec-desc', t.secDesc);
-  updateText('seo-title', t.seoTitle);
-  updateHTML('seo-list', t.seoList);
+      // プレースホルダーの書き換え
+      if (textOld) textOld.placeholder = t.placeholderA;
+      if (textNew) textNew.placeholder = t.placeholderB;
 
-  // プレースホルダーの書き換え
-  const inputA = document.getElementById('textA');
-  const inputB = document.getElementById('textB');
-  if (inputA) inputA.placeholder = t.placeholderA;
-  if (inputB) inputB.placeholder = t.placeholderB;
-
-  // 5. 差分結果の再描画（テキストが入力されている場合）
-  if (typeof renderDiff === 'function') {
-    renderDiff();
-  }
-}
-
-      // UIテキスト更新
-      document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
-      document.getElementById('nav-word').textContent = i18n[lang].navWord;
-      document.getElementById('title').textContent = i18n[lang].title;
-      document.getElementById('subtitle').textContent = i18n[lang].subtitle;
-      textOld.placeholder = i18n[lang].placeholderA;
-      textNew.placeholder = i18n[lang].placeholderB;
-      document.getElementById('btn-clear-a').textContent = i18n[lang].clearBtn;
-      document.getElementById('btn-clear-b').textContent = i18n[lang].clearBtn;
-      document.getElementById('result-title').textContent = i18n[lang].resultTitle;
-      document.getElementById('sec-title').textContent = i18n[lang].secTitle;
-      document.getElementById('sec-desc').textContent = i18n[lang].secDesc;
-      document.getElementById('seo-title').textContent = i18n[lang].seoTitle;
-      document.getElementById('seo-list').innerHTML = i18n[lang].seoList;
-
+      // 5. 差分結果の再描画
       compareText(false);
     }
 
@@ -526,20 +499,17 @@ function setLanguage(lang) {
         textNew: textNew.value
       };
       
-      // 入力内容からハッシュパラメータを作成
       const params = new URLSearchParams();
       if (textOld.value) params.set('a', textOld.value);
       if (textNew.value) params.set('b', textNew.value);
       
       const newHash = params.toString() ? '#' + params.toString() : window.location.pathname;
       
-      // 現在のURLと異なる場合のみブラウザ履歴に追加
       if (window.location.hash !== '#' + params.toString()) {
         history.pushState(stateData, '', newHash);
       }
     }
 
-    // エスケープ処理
     function escapeHtml(str) {
       return str
         .replace(/&/g, '&amp;')
@@ -547,23 +517,15 @@ function setLanguage(lang) {
         .replace(/>/g, '&gt;');
     }
 
-    // 差分テキストのレンダリング処理
     function renderDiffHtml(diffText, tagName) {
       const safeText = escapeHtml(diffText);
+      if (!tagName) return safeText;
 
-      // 差分がない部分はそのまま表示
-      if (!tagName) {
-        return safeText;
-      }
-
-      // 差分が「すべて空白（半角・全角スペースまたは改行）」のみで構成されているか判定
       const isOnlySpaces = /^[\s\u3000]+$/.test(diffText);
 
       if (isOnlySpaces) {
-        // 空白のみの差分の場合は、幅を「空白1つ分」に固定した1つのハイライト枠で表示
         return `<${tagName} class="space-highlight">&nbsp;</${tagName}>`;
       } else {
-        // 文字を含む通常の差分の場合は、これまで通り1つの連続したハイライト枠で表示
         return `<${tagName}>${safeText}</${tagName}>`;
       }
     }
@@ -605,7 +567,6 @@ function setLanguage(lang) {
         resultNew.innerHTML = htmlNew || `<span class="result-placeholder">${i18n[currentLang].noText}</span>`;
       }
 
-      // ユーザー入力の場合、少しタイピングが落ち着いてから履歴に追加
       if (isUserInteraction && !isInternalUpdate) {
         clearTimeout(historyTimer);
         historyTimer = setTimeout(() => {
@@ -614,7 +575,6 @@ function setLanguage(lang) {
       }
     }
 
-    // URLハッシュまたは history.state から状態を復元する関数
     function loadStateFromUrl() {
       isInternalUpdate = true;
       const hash = window.location.hash.substring(1);
@@ -630,7 +590,6 @@ function setLanguage(lang) {
       isInternalUpdate = false;
     }
 
-    // ブラウザの「戻る」「進む」ボタンが押されたときのイベント
     window.addEventListener('popstate', function(event) {
       if (event.state) {
         isInternalUpdate = true;
@@ -652,24 +611,24 @@ function setLanguage(lang) {
   </script>
 
   <!-- SEO & AdSense 用解説コンテンツ -->
-<section style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e2e8f0; color: #334155;">
-  <h2 style="font-size: 20px; margin-bottom: 12px; color: #0f172a;">オンラインテキスト比較ツール（Diff）の使い方と特徴</h2>
-  <p style="font-size: 14px; line-height: 1.7; margin-bottom: 16px;">
-    本ツールは、2つの文章やプログラムコードを比較し、追加・削除・変更された差分箇所（Diff）をリアルタイムでハイライト表示するWeb便利ツールです。原稿の校正作業や、ソースコードの変更点確認、文書のバージョン更新前後の差分チェックを効率的に行えます。
-  </p>
+  <section style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e2e8f0; color: #334155;">
+    <h2 style="font-size: 20px; margin-bottom: 12px; color: #0f172a;">オンラインテキスト比較ツール（Diff）の使い方と特徴</h2>
+    <p style="font-size: 14px; line-height: 1.7; margin-bottom: 16px;">
+      本ツールは、2つの文章やプログラムコードを比較し、追加・削除・変更された差分箇所（Diff）をリアルタイムでハイライト表示するWeb便利ツールです。原稿の校正作業や、ソースコードの変更点確認、文書のバージョン更新前後の差分チェックを効率的に行えます。
+    </p>
 
-  <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">主な機能とメリット</h3>
-  <ul style="font-size: 14px; line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
-    <li><strong>ブラウザ完結の安心セキュリティ:</strong> 入力されたテキストデータはサーバーへ送信されず、お使いのブラウザ内（クライアントサイド）でのみ処理されます。機密情報や重要な文章でも安心して比較可能です。</li>
-    <li><strong>直感的な差分表示:</strong> 変更箇所が視覚的に色分け表示されるため、一目でどの行が修正・削除・追加されたかが把握できます。</li>
-    <li><strong>レスポンシブ対応:</strong> PC・スマートフォン・タブレットなど、端末を選ばずスムーズに操作できます。</li>
-  </ul>
+    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">主な機能とメリット</h3>
+    <ul style="font-size: 14px; line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
+      <li><strong>ブラウザ完結の安心セキュリティ:</strong> 入力されたテキストデータはサーバーへ送信されず、お使いのブラウザ内（クライアントサイド）でのみ処理されます。機密情報や重要な文章でも安心して比較可能です。</li>
+      <li><strong>直感的な差分表示:</strong> 変更箇所が視覚的に色分け表示されるため、一目でどの行が修正・削除・追加されたかが把握できます。</li>
+      <li><strong>レスポンシブ対応:</strong> PC・スマートフォン・タブレットなど、端末を選ばずスムーズに操作できます。</li>
+    </ul>
 
-  <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">よく使われる活用シーン</h3>
-  <p style="font-size: 14px; line-height: 1.7;">
-    ブログ記事や論文の推敲、HTML/CSS/JavaScriptなどのプログラムコード修正確認、契約書や規約の改定時の差分抽出など、さまざまなテキスト検証にお役立ていただけます。
-  </p>
-</section>
+    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">よく使われる活用シーン</h3>
+    <p style="font-size: 14px; line-height: 1.7;">
+      ブログ記事や論文の推敲、HTML/CSS/JavaScriptなどのプログラムコード修正確認、契約書や規約の改定時の差分抽出など、さまざまなテキスト検証にお役立ていただけます。
+    </p>
+  </section>
   
 </body>
 </html>
