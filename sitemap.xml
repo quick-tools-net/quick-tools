@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://quick-tools-net.github.io/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://quick-tools-net.github.io/text-diff.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quick-tools-net.github.io/word-count.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quick-tools-net.github.io/pomodoro.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quick-tools-net.github.io/privacy.html</loc>
+    <priority>0.3</priority>
+  </url>
+</urlset>
