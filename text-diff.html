@@ -398,58 +398,104 @@
     let historyTimer = null;
     let isInternalUpdate = false;
 
-    // 翻訳辞書
-    const i18n = {
-      ja: {
-        navDiff: 'テキスト比較',
-        navWord: '文字数カウント',
-        title: 'テキスト差分比較ツール',
-        subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
-        placeholderA: 'Text A を入力してください...',
-        placeholderB: 'Text B を入力してください...',
-        clearBtn: 'クリア',
-        resultTitle: '比較結果',
-        resultPlaceholderA: 'テキストを入力すると、ここに Text A の比較が表示されます。',
-        resultPlaceholderB: 'テキストを入力すると、ここに Text B の比較が表示されます。',
-        noText: '（テキストなし）',
-        secTitle: '🔒 安全なセキュリティ構造',
-        secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。',
-        seoTitle: 'テキスト差分比較ツールの特長',
-        seoList: `
-          <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
-          <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
-          <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
-        `
-      },
-      en: {
-        navDiff: 'Text Diff',
-        navWord: 'Word Count',
-        title: 'Text Diff Checker',
-        subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
-        placeholderA: 'Enter Text A here...',
-        placeholderB: 'Enter Text B here...',
-        clearBtn: 'Clear',
-        resultTitle: 'Comparison Result',
-        resultPlaceholderA: 'Enter text above to see comparison for Text A.',
-        resultPlaceholderB: 'Enter text above to see comparison for Text B.',
-        noText: '(No text)',
-        secTitle: '🔒 Safe & Secure',
-        secDesc: 'Your text data is never sent to any external servers. All comparison processing is performed entirely within your browser (client-side), making it safe for confidential documents.',
-        seoTitle: 'Features of Text Diff Checker',
-        seoList: `
-          <li><strong>Side-by-Side View:</strong> Easily spot changes with a clear split-screen comparison.</li>
-          <li><strong>Real-time Comparison:</strong> Differences are calculated instantly as you type or paste.</li>
-          <li><strong>100% Free & No Sign-up:</strong> No registration or installation required. Use it immediately.</li>
-        `
-      }
-    };
+    // 翻訳辞書（ポモドーロ用のナビキーを追加）
+const i18n = {
+  ja: {
+    navDiff: 'テキスト比較',
+    navWord: '文字数カウント',
+    navPomo: 'ポモドーロ', // 👈 追加
+    title: 'テキスト差分比較ツール',
+    subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
+    placeholderA: 'Text A を入力してください...',
+    placeholderB: 'Text B を入力してください...',
+    clearBtn: 'クリア',
+    resultTitle: '比較結果',
+    resultPlaceholderA: 'テキストを入力すると、ここに Text A の比較が表示されます。',
+    resultPlaceholderB: 'テキストを入力すると、ここに Text B の比較が表示されます。',
+    noText: '（テキストなし）',
+    secTitle: '🔒 安全なセキュリティ構造',
+    secDesc: '入力されたテキストデータは外部サーバーへ送信されません。すべての比較処理はお使いのブラウザ上（クライアントサイド）でのみ処理されるため、機密文書や社内テキストでも安心してお使いいただけます。',
+    seoTitle: 'テキスト差分比較ツールの特長',
+    seoList: `
+      <li><strong>左右分割表示：</strong> 変更前後を2画面で並べて確認できるため、どこが修正されたか直感的に分かります。</li>
+      <li><strong>リアルタイム比較：</strong> テキストを入力または貼り付けるだけで、即時に差分を算出します。</li>
+      <li><strong>完全無料・登録不要：</strong> 面倒な会員登録やインストールは一切不要で、すぐに利用できます。</li>
+    `
+  },
+  en: {
+    navDiff: 'Text Diff',
+    navWord: 'Word Count',
+    navPomo: 'Pomodoro', // 👈 追加
+    title: 'Text Diff Checker',
+    subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
+    placeholderA: 'Enter Text A here...',
+    placeholderB: 'Enter Text B here...',
+    clearBtn: 'Clear',
+    resultTitle: 'Comparison Result',
+    resultPlaceholderA: 'Enter text above to see comparison for Text A.',
+    resultPlaceholderB: 'Enter text above to see comparison for Text B.',
+    noText: '(No text)',
+    secTitle: '🔒 Safe & Secure',
+    secDesc: 'Your text data is never sent to any external servers. All comparison processing is performed entirely within your browser (client-side), making it safe for confidential documents.',
+    seoTitle: 'Features of Text Diff Checker',
+    seoList: `
+      <li><strong>Side-by-Side View:</strong> Easily spot changes with a clear split-screen comparison.</li>
+      <li><strong>Real-time Comparison:</strong> Differences are calculated instantly as you type or paste.</li>
+      <li><strong>100% Free & No Sign-up:</strong> No registration or installation required. Use it immediately.</li>
+    `
+  }
+};
 
-    function setLanguage(lang) {
-      currentLang = lang;
-      
-      // 言語ボタンのアクティブ表示切替
-      document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
-      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+let currentLang = 'ja';
+
+function setLanguage(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+  if (!t) return;
+
+  // 1. ボタンのアクティブ状態切り替え
+  const btnJa = document.getElementById('lang-ja');
+  const btnEn = document.getElementById('lang-en');
+  if (btnJa) btnJa.classList.toggle('active', lang === 'ja');
+  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+
+  // 2. 要素が存在するときだけ文字を書き換える安全ヘルパー関数
+  const updateText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  const updateHTML = (id, html) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  };
+
+  // 3. ナビゲーションの切り替え
+  updateText('nav-diff', t.navDiff);
+  updateText('nav-word', t.navWord);
+  updateText('nav-pomo', t.navPomo);
+
+  // 4. ページ内テキストの切り替え
+  updateText('title', t.title);
+  updateText('subtitle', t.subtitle);
+  updateText('clear-btn', t.clearBtn);
+  updateText('result-title', t.resultTitle);
+  updateText('sec-title', t.secTitle);
+  updateText('sec-desc', t.secDesc);
+  updateText('seo-title', t.seoTitle);
+  updateHTML('seo-list', t.seoList);
+
+  // プレースホルダーの書き換え
+  const inputA = document.getElementById('textA');
+  const inputB = document.getElementById('textB');
+  if (inputA) inputA.placeholder = t.placeholderA;
+  if (inputB) inputB.placeholder = t.placeholderB;
+
+  // 5. 差分結果の再描画（テキストが入力されている場合）
+  if (typeof renderDiff === 'function') {
+    renderDiff();
+  }
+}
 
       // UIテキスト更新
       document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
