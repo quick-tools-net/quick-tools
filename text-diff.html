@@ -2,16 +2,16 @@
 <html lang="ja">
 <head>
   <!-- ファビコン設定 -->
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" href="icon-192.png" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-<!-- OGP・X(Twitter)カード設定（SNSシェア用） -->
-<meta property="og:site_name" content="Quick Tools">
-<meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
-<meta name="twitter:card" content="summary">
-<!-- Xアカウントを作成したら以下も記述（例: @quicktools_net） -->
-<!-- <meta name="twitter:site" content="@あなたのXアカウント名"> -->
+  <!-- OGP・X(Twitter)カード設定（SNSシェア用） -->
+  <meta property="og:site_name" content="Quick Tools">
+  <meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <!-- Xアカウントを作成したら以下も記述（例: @quicktools_net） -->
+  <!-- <meta name="twitter:site" content="@あなたのXアカウント名"> -->
   
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
@@ -34,15 +34,15 @@
 
   <style>
     :root {
-      --primary-color: #4f46e5;
-      --primary-hover: #4338ca;
+      --primary-color: #0284c7;     /* オーシャンブルーに統一 */
+      --primary-hover: #0369a1;     /* ホバー時の濃いブルー */
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --result-bg: #f1f5f9;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border-color: #cbd5e1;
-      --add-bg: #bbf7d0;     /* 視認性の良いグリーン */
+      --add-bg: #bbf7d0;       /* 視認性の良いグリーン */
       --add-text: #064e3b;   
       --del-bg: #fecdd3;     
       --del-text: #881337;
@@ -86,6 +86,7 @@
       font-size: 18px;
       letter-spacing: -0.02em;
       margin-right: 10px;
+      text-decoration: none;
     }
     nav a {
       color: #94a3b8;
@@ -203,7 +204,7 @@
     textarea:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); /* フォーカスリングも青に調整 */
     }
     textarea::placeholder {
       color: #94a3b8;
@@ -272,11 +273,11 @@
     .info-card {
       margin-top: 40px;
       padding: 20px 24px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
       border-radius: 12px;
       font-size: 14px;
-      color: #1e40af;
+      color: #0369a1;
     }
     .info-card strong {
       font-size: 15px;
@@ -287,7 +288,7 @@
     }
     .info-card p {
       margin: 0;
-      color: #1e3a8a;
+      color: #0c4a6e;
     }
 
     .seo-content {
@@ -336,7 +337,7 @@
       <a href="text-diff.html" class="active" id="nav-diff">テキスト比較</a>
       <a href="word-count.html" id="nav-word">文字数カウント</a>
       <a href="pomodoro.html" id="nav-pomo">ポモドーロ</a>
-      <a href="convert-case.html">全角/半角変換</a>
+      <a href="convert-case.html" id="nav-convert">全角/半角変換</a>
     </nav>
     <div class="lang-switch">
       <button class="lang-btn active" id="lang-ja" onclick="setLanguage('ja')">JP</button>
@@ -413,6 +414,7 @@
         navDiff: 'テキスト比較',
         navWord: '文字数カウント',
         navPomo: 'ポモドーロ',
+        navConvert: '全角/半角変換',
         title: 'テキスト差分比較ツール',
         subtitle: '2つの文章の変更点（追加・削除・修正）を左右対比で視覚的に比較します。',
         placeholderA: 'Text A を入力してください...',
@@ -435,6 +437,7 @@
         navDiff: 'Text Diff',
         navWord: 'Word Count',
         navPomo: 'Pomodoro',
+        navConvert: 'Case Converter',
         title: 'Text Diff Checker',
         subtitle: 'Visually compare the differences (additions, deletions, edits) between two texts side by side.',
         placeholderA: 'Enter Text A here...',
@@ -481,6 +484,7 @@
       updateText('nav-diff', t.navDiff);
       updateText('nav-word', t.navWord);
       updateText('nav-pomo', t.navPomo);
+      updateText('nav-convert', t.navConvert);
 
       // 4. ページ内テキストの切り替え
       updateText('title', t.title);
