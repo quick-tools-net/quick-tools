@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- ファビコン設定 -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  
+  <!-- OGP・X(Twitter)カード設定 -->
+  <meta property="og:site_name" content="Quick Tools">
+  <meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@quicktools_net">
+
+  <title>全角・半角 / 大文字・小文字 変換ツール - Quick Tools</title>
+  <meta name="description" content="テキストの全角・半角変換、大文字・小文字変換、ひらがな・カタカナ変換が一瞬で完了する無料Webツール。個人情報やデータの送信なしで安全に使えます。">
+
+  <!-- Search Console 確認用メタタグ -->
+  <meta name="google-site-verification" content="ezGVUpws8NiEhVuruYFpa1Ym7Et59Miq9PEDiAKG1CU" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Z9PXF3MLDH');
+  </script>
+
+  <!-- Google AdSense 審査用コード -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5528416263110291"
+     crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --primary-color: #0284c7;
+      --primary-hover: #0369a1;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      padding: 14px 24px;
+      border-radius: 12px;
+      margin: 20px 0 30px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .logo { color: #fff; font-weight: 700; font-size: 18px; margin-right: 10px; text-decoration: none; }
+    nav a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; padding: 4px 8px; border-radius: 6px; }
+    nav a:hover { color: #fff; background-color: rgba(255, 255, 255, 0.1); }
+    nav a.active { color: #fff; font-weight: 600; background-color: var(--primary-color); }
+
+    .lang-switch { display: flex; background: rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 2px; }
+    .lang-btn { background: none; border: none; color: #94a3b8; padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 4px; }
+    .lang-btn.active { background: #ffffff; color: #0f172a; }
+
+    .tool-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .desc { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
+    textarea:focus { outline: none; border-color: var(--primary-color); }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-color);
+      color: #fff;
+      border-color: var(--primary-color);
+    }
+
+    .copy-btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease;
+    }
+    .copy-btn:hover { background: var(--primary-hover); }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 16px; margin-bottom: 12px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="index.html" class="logo">Quick Tools</a>
+      <a href="text-diff.html">テキスト比較</a>
+      <a href="word-count.html">文字数カウント</a>
+      <a href="pomodoro.html">ポモドーロ</a>
+      <a href="convert-case.html" class="active">全角/半角変換</a>
+    </nav>
+    <div class="lang-switch">
+      <button class="lang-btn" id="lang-ja" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
+  </header>
+
+  <div class="tool-container">
+    <h1 id="page-title">全角・半角 / 大文字・小文字 変換ツール</h1>
+    <p class="desc" id="page-desc">変換したいテキストを入力し、実行したい変換ボタンをクリックしてください。</p>
+
+    <textarea id="text-input" placeholder="ここにテキストを入力またはペースト..."></textarea>
+
+    <div class="btn-grid">
+      <button class="action-btn" onclick="convert('toHalfWidth')" id="btn-half">英数記号 ➔ 半角</button>
+      <button class="action-btn" onclick="convert('toFullWidth')" id="btn-full">英数記号 ➔ 全角</button>
+      <button class="action-btn" onclick="convert('toUpper')" id="btn-upper">英字 ➔ 大文字</button>
+      <button class="action-btn" onclick="convert('toLower')" id="btn-lower">英字 ➔ 小文字</button>
+      <button class="action-btn" onclick="convert('toKatakana')" id="btn-katakana">ひらがな ➔ カタカナ</button>
+      <button class="action-btn" onclick="convert('toHiragana')" id="btn-hiragana">カタカナ ➔ ひらがな</button>
+    </div>
+
+    <button class="copy-btn" onclick="copyText()" id="btn-copy">📋 変換結果をコピー</button>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="privacy.html" id="link-privacy">プライバシーポリシー</a>
+      <span style="color: #cbd5e1;">•</span>
+      <a href="https://x.com/quicktools_net" target="_blank" rel="noopener noreferrer">公式X (@quicktools_net)</a>
+    </div>
+    <p>&copy; Quick Tools. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let currentLang = 'ja';
+
+    const i18n = {
+      ja: {
+        title: '全角・半角 / 大文字・小文字 変換ツール',
+        desc: '変換したいテキストを入力し、実行したい変換ボタンをクリックしてください。',
+        placeholder: 'ここにテキストを入力またはペースト...',
+        half: '英数記号 ➔ 半角',
+        full: '英数記号 ➔ 全角',
+        upper: '英字 ➔ 大文字',
+        lower: '英字 ➔ 小文字',
+        katakana: 'ひらがな ➔ カタカナ',
+        hiragana: 'カタカナ ➔ ひらがな',
+        copy: '📋 変換結果をコピー',
+        copied: '✅ コピー完了！'
+      },
+      en: {
+        title: 'Case & Width Converter',
+        desc: 'Enter your text and click any button to perform conversion.',
+        placeholder: 'Enter or paste text here...',
+        half: 'Full-width ➔ Half-width',
+        full: 'Half-width ➔ Full-width',
+        upper: 'abc ➔ UPPERCASE',
+        lower: 'ABC ➔ lowercase',
+        katakana: 'Hiragana ➔ Katakana',
+        hiragana: 'Katakana ➔ Hiragana',
+        copy: '📋 Copy Converted Text',
+        copied: '✅ Copied!'
+      }
+    };
+
+    function convert(type) {
+      const input = document.getElementById('text-input');
+      let val = input.value;
+
+      switch(type) {
+        case 'toHalfWidth':
+          val = val.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+                   .replace(/ /g, ' ');
+          break;
+        case 'toFullWidth':
+          val = val.replace(/[!-~]/g, s => String.fromCharCode(s.charCodeAt(0) + 0xFEE0))
+                   .replace(/ /g, ' ');
+          break;
+        case 'toUpper':
+          val = val.toUpperCase();
+          break;
+        case 'toLower':
+          val = val.toLowerCase();
+          break;
+        case 'toKatakana':
+          val = val.replace(/[\u3041-\u3096]/g, s => String.fromCharCode(s.charCodeAt(0) + 0x60));
+          break;
+        case 'toHiragana':
+          val = val.replace(/[\u30a1-\u30f6]/g, s => String.fromCharCode(s.charCodeAt(0) - 0x60));
+          break;
+      }
+      input.value = val;
+    }
+
+    function copyText() {
+      const input = document.getElementById('text-input');
+      if (!input.value) return;
+      navigator.clipboard.writeText(input.value).then(() => {
+        const copyBtn = document.getElementById('btn-copy');
+        copyBtn.textContent = i18n[currentLang].copied;
+        setTimeout(() => {
+          copyBtn.textContent = i18n[currentLang].copy;
+        }, 2000);
+      });
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+      document.getElementById('page-title').textContent = i18n[lang].title;
+      document.getElementById('page-desc').textContent = i18n[lang].desc;
+      document.getElementById('text-input').placeholder = i18n[lang].placeholder;
+      document.getElementById('btn-half').textContent = i18n[lang].half;
+      document.getElementById('btn-full').textContent = i18n[lang].full;
+      document.getElementById('btn-upper').textContent = i18n[lang].upper;
+      document.getElementById('btn-lower').textContent = i18n[lang].lower;
+      document.getElementById('btn-katakana').textContent = i18n[lang].katakana;
+      document.getElementById('btn-hiragana').textContent = i18n[lang].hiragana;
+      document.getElementById('btn-copy').textContent = i18n[lang].copy;
+    }
+
+    setLanguage('ja');
+  </script>
+</body>
+</html>
