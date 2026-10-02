@@ -9,11 +9,11 @@
   <link rel="icon" href="icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   
-<!-- OGP・X(Twitter)カード設定（SNSシェア用） -->
-<meta property="og:site_name" content="Quick Tools">
-<meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:site" content="@quicktools_net">
+  <!-- OGP・X(Twitter)カード設定（SNSシェア用） -->
+  <meta property="og:site_name" content="Quick Tools">
+  <meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@quicktools_net">
 
   <title>Quick Tools - インストール不要の無料Webツール集</title>
   <meta name="description" content="ブラウザで今すぐ使える便利ツール集。テキスト比較（差分チェック）、文字数カウント、ポモドーロタイマーなど、会員登録不要・無料で提供中。">
@@ -152,30 +152,29 @@
       margin: 0 auto;
     }
 
-/* ツールカードグリッド（修正版） */
-.tool-grid {
-  display: grid;
-  /* 最小300pxの幅を確保しつつ、2列または自動で均等配置 */
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
+    /* ツールカードグリッド */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
 
-.tool-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 24px;
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  height: 100%; /* すべてのカードの高さを統一 */
-}
+    .tool-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      height: 100%;
+    }
     .tool-card:hover {
       transform: translateY(-4px);
       border-color: var(--primary-color);
@@ -286,7 +285,7 @@
       <a href="text-diff.html" id="nav-diff">テキスト比較</a>
       <a href="word-count.html" id="nav-word">文字数カウント</a>
       <a href="pomodoro.html" id="nav-pomo">ポモドーロ</a>
-      <a href="convert-case.html">全角/半角変換</a>
+      <a href="convert-case.html" id="nav-convert">全角/半角変換</a>
     </nav>
     <div class="lang-switch">
       <button class="lang-btn" id="lang-ja" onclick="setLanguage('ja')">JP</button>
@@ -299,7 +298,7 @@
     <p class="subtitle" id="subtitle">会員登録不要・完全無料。ブラウザで今すぐ使える作業効率化Webツール集です。</p>
   </div>
 
-  <!-- ツールカード一覧 -->
+  <!-- ツールカード一覧（4つのカードがこのgridの中に収まります） -->
   <div class="tool-grid">
     <a href="text-diff.html" class="tool-card">
       <div>
@@ -327,17 +326,17 @@
       </div>
       <div class="tool-link-text" id="card-pomo-btn">ツールを使う →</div>
     </a>
+
+    <a href="convert-case.html" class="tool-card">
+      <div>
+        <div class="tool-icon">🔤</div>
+        <div class="tool-title" id="card-convert-title">全角/半角・ケース変換</div>
+        <div class="tool-desc" id="card-convert-desc">全角⇔半角、大文字⇔小文字、ひらがな⇔カタカナを一瞬で変換。入力データはサーバーに送信されず安心です。</div>
+      </div>
+      <div class="tool-link-text" id="card-convert-btn">ツールを使う →</div>
+    </a>
   </div>
 
-<a href="convert-case.html" class="tool-card">
-  <div>
-    <div class="tool-icon">🔤</div>
-    <div class="tool-title" id="card-convert-title">全角/半角・ケース変換</div>
-    <div class="tool-desc" id="card-convert-desc">全角⇔半角、大文字⇔小文字、ひらがな⇔カタカナを一瞬で変換。入力データはサーバーに送信されず安心です。</div>
-  </div>
-  <div class="tool-link-text" id="card-convert-btn">ツールを使う →</div>
-</a>
-  
   <!-- サイトの特徴 -->
   <div class="features-section">
     <h2 id="feat-title">Quick Tools が選ばれる理由</h2>
@@ -357,15 +356,15 @@
     </div>
   </div>
 
-<!-- フッター -->
-<footer>
-  <div class="footer-links">
-    <a href="privacy.html" id="link-privacy">プライバシーポリシー</a>
-    <span style="color: #cbd5e1;">•</span>
-    <a href="https://x.com/quicktools_net" target="_blank" rel="noopener noreferrer">公式X (@quicktools_net)</a>
-  </div>
-  <p>&copy; Quick Tools. All rights reserved.</p>
-</footer>
+  <!-- フッター -->
+  <footer>
+    <div class="footer-links">
+      <a href="privacy.html" id="link-privacy">プライバシーポリシー</a>
+      <span style="color: #cbd5e1;">•</span>
+      <a href="https://x.com/quicktools_net" target="_blank" rel="noopener noreferrer">公式X (@quicktools_net)</a>
+    </div>
+    <p>&copy; Quick Tools. All rights reserved.</p>
+  </footer>
 
   <script>
     let currentLang = 'ja';
@@ -375,6 +374,7 @@
         navDiff: 'テキスト比較',
         navWord: '文字数カウント',
         navPomo: 'ポモドーロ',
+        navConvert: '全角/半角変換',
         title: 'Quick Tools',
         subtitle: '会員登録不要・完全無料。ブラウザで今すぐ使える作業効率化Webツール集です。',
         cardDiffTitle: 'テキスト比較ツール',
@@ -387,8 +387,8 @@
         cardPomoDesc: '25分間の集中と5分間の休憩を繰り返し、作業効率を高めるタイマー。通知音と自動切り替え機能付き。',
         cardPomoBtn: 'ツールを使う →',
         cardConvertTitle: '全角/半角・ケース変換',
-    cardConvertDesc: '全角⇔半角、大文字⇔小文字、ひらがな⇔カタカナを一瞬で変換。入力データは外部に送信されず安心です。',
-    cardConvertBtn: 'ツールを使う →',
+        cardConvertDesc: '全角⇔半角、大文字⇔小文字、ひらがな⇔カタカナを一瞬で変換。入力データは外部に送信されず安心です。',
+        cardConvertBtn: 'ツールを使う →',
         featTitle: 'Quick Tools が選ばれる理由',
         feat1H3: '⚡ 登録不要・すぐ使える',
         feat1P: 'アカウント登録やログインの手間は一切ありません。ページを開いてすぐに利用できます。',
@@ -402,6 +402,7 @@
         navDiff: 'Text Diff',
         navWord: 'Word Count',
         navPomo: 'Pomodoro',
+        navConvert: 'Case Converter',
         title: 'Quick Tools',
         subtitle: 'Free & No Registration. Useful web tools right in your browser.',
         cardDiffTitle: 'Text Diff Checker',
@@ -414,8 +415,8 @@
         cardPomoDesc: 'Boost productivity with 25-min focus sessions and 5-min breaks. Features audio alerts and auto switching.',
         cardPomoBtn: 'Use Tool →',
         cardConvertTitle: 'Case & Width Converter',
-    cardConvertDesc: 'Convert full/half-width, uppercase/lowercase, and Katakana/Hiragana instantly.',
-    cardConvertBtn: 'Use Tool →',
+        cardConvertDesc: 'Convert full/half-width, uppercase/lowercase, and Katakana/Hiragana instantly.',
+        cardConvertBtn: 'Use Tool →',
         featTitle: 'Why Choose Quick Tools',
         feat1H3: '⚡ No Signup Required',
         feat1P: 'Start using tools immediately without the hassle of creating an account or logging in.',
@@ -436,6 +437,7 @@
       document.getElementById('nav-diff').textContent = i18n[lang].navDiff;
       document.getElementById('nav-word').textContent = i18n[lang].navWord;
       document.getElementById('nav-pomo').textContent = i18n[lang].navPomo;
+      document.getElementById('nav-convert').textContent = i18n[lang].navConvert;
       document.getElementById('title').textContent = i18n[lang].title;
       document.getElementById('subtitle').textContent = i18n[lang].subtitle;
 
@@ -451,6 +453,10 @@
       document.getElementById('card-pomo-desc').textContent = i18n[lang].cardPomoDesc;
       document.getElementById('card-pomo-btn').textContent = i18n[lang].cardPomoBtn;
 
+      document.getElementById('card-convert-title').textContent = i18n[lang].cardConvertTitle;
+      document.getElementById('card-convert-desc').textContent = i18n[lang].cardConvertDesc;
+      document.getElementById('card-convert-btn').textContent = i18n[lang].cardConvertBtn;
+
       document.getElementById('feat-title').textContent = i18n[lang].featTitle;
       document.getElementById('feat1-h3').textContent = i18n[lang].feat1H3;
       document.getElementById('feat1-p').textContent = i18n[lang].feat1P;
@@ -460,10 +466,6 @@
       document.getElementById('feat3-p').textContent = i18n[lang].feat3P;
 
       document.getElementById('link-privacy').textContent = i18n[lang].linkPrivacy;
-
-      document.getElementById('card-convert-title').textContent = i18n[lang].cardConvertTitle;
-  document.getElementById('card-convert-desc').textContent = i18n[lang].cardConvertDesc;
-  document.getElementById('card-convert-btn').textContent = i18n[lang].cardConvertBtn;
     }
 
     setLanguage('ja');
