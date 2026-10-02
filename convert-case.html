@@ -11,6 +11,10 @@
   
   <!-- OGP・X(Twitter)カード設定 -->
   <meta property="og:site_name" content="Quick Tools">
+  <meta property="og:title" content="全角・半角 / 大文字・小文字 変換ツール - Quick Tools">
+  <meta property="og:description" content="テキストの全角・半角変換、大文字・小文字変換、ひらがな・カタカナ変換が一瞬で完了する無料Webツール。個人情報やデータの送信なしで安全に使えます。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://quick-tools-net.github.io/convert-case.html">
   <meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="@quicktools_net">
@@ -237,12 +241,14 @@
 
       switch(type) {
         case 'toHalfWidth':
+          // 全角英数記号 ➔ 半角 + 全角スペース ➔ 半角スペース
           val = val.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-                   .replace(/ /g, ' ');
+                   .replace(/\u3000/g, ' ');
           break;
         case 'toFullWidth':
+          // 半角英数記号 ➔ 全角 + 半角スペース ➔ 全角スペース
           val = val.replace(/[!-~]/g, s => String.fromCharCode(s.charCodeAt(0) + 0xFEE0))
-                   .replace(/ /g, ' ');
+                   .replace(/ /g, '\u3000');
           break;
         case 'toUpper':
           val = val.toUpperCase();
@@ -263,17 +269,34 @@
     function copyText() {
       const input = document.getElementById('text-input');
       if (!input.value) return;
-      navigator.clipboard.writeText(input.value).then(() => {
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(input.value)
+          .then(showCopiedNotice)
+          .catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function fallbackCopy() {
+        input.select();
+        document.execCommand('copy');
+        showCopiedNotice();
+      }
+
+      function showCopiedNotice() {
         const copyBtn = document.getElementById('btn-copy');
         copyBtn.textContent = i18n[currentLang].copied;
         setTimeout(() => {
           copyBtn.textContent = i18n[currentLang].copy;
         }, 2000);
-      });
+      }
     }
 
     function setLanguage(lang) {
       currentLang = lang;
+      document.documentElement.lang = lang;
+
       document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
       document.getElementById('lang-en').classList.toggle('active', lang === 'en');
 
