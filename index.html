@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
- <!-- 先頭に / を付けてルート直下であることを明示 -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/icon-192.png" type="image/png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- ファビコン設定（パスの先頭 / を除外） -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   
   <!-- OGP・X(Twitter)カード設定（SNSシェア用） -->
-<meta property="og:site_name" content="Quick Tools">
-<meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
-<meta name="twitter:card" content="summary">
-<!-- Xアカウントを作成したら以下も記述（例: @quicktools_net） -->
-<!-- <meta name="twitter:site" content="@あなたのXアカウント名"> -->
-  
+  <meta property="og:site_name" content="Quick Tools">
+  <meta property="og:image" content="https://quick-tools-net.github.io/icon-512.png">
+  <meta name="twitter:card" content="summary">
+
+  <title>Quick Tools - インストール不要の無料Webツール集</title>
+  <meta name="description" content="ブラウザで今すぐ使える便利ツール集。テキスト比較（差分チェック）、文字数カウント、ポモドーロタイマーなど、会員登録不要・無料で提供中。">
+
+  <!-- Search Console 確認用メタタグ -->
+  <meta name="google-site-verification" content="ezGVUpws8NiEhVuruYFpa1Ym7Et59Miq9PEDiAKG1CU" />
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9PXF3MLDH"></script>
   <script>
@@ -21,26 +27,13 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-Z9PXF3MLDH');
   </script>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quick Tools - インストール不要の無料Webツール集</title>
-  <meta name="description" content="ブラウザで今すぐ使える便利ツール集。テキスト比較（差分チェック）、文字数カウント、ポモドーロタイマーなど、会員登録不要・無料で提供中。">
-
-  <!-- Search Console 確認用メタタグ -->
-  <meta name="google-site-verification" content="ezGVUpws8NiEhVuruYFpa1Ym7Et59Miq9PEDiAKG1CU" />
-  <!-- GA4 タグや AdSense タグなど -->
-  
-  <!-- -------------------------------------------------- -->
-  <!-- 👇 ここから：Google AdSense 審査用コード（貼り付け箇所） -->
+  <!-- Google AdSense 審査用コード -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5528416263110291"
      crossorigin="anonymous"></script>
-  <!-- 👆 ここまで ---------------------------------------- -->
 
-  <!-- 以下は元からあるCSSやスクリプト等 -->
- 
   <style>
     :root {
       --primary-color: #0284c7;     /* オーシャンブルー */
@@ -285,7 +278,7 @@
   <!-- 共通ヘッダー -->
   <header>
     <nav>
-<a href="index.html" class="logo">Quick Tools</a>
+      <a href="index.html" class="logo">Quick Tools</a>
       <a href="text-diff.html" id="nav-diff">テキスト比較</a>
       <a href="word-count.html" id="nav-word">文字数カウント</a>
       <a href="pomodoro.html" id="nav-pomo">ポモドーロ</a>
