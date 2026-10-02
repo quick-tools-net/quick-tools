@@ -14,7 +14,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>【無料】ポモドーロタイマー - 集中力を高めるタイムマネジメント | Quick Tools</title>
-  <meta name="description" content="25分間の集中と5分間の休憩を繰り返す無料のポモドーロタイマーです。アラーム音機能・カウント自動切り替え機能付き。ブラウザ上で動作しダウンロード不要です。">
+  <meta name="description" content="25分間の集中と5分間・15分間の休憩を繰り返す無料のポモドーロタイマーです。アラーム音機能・カウント自動切り替え機能付き。ブラウザ上で動作しダウンロード不要です。">
 
   <!-- Google AdSense 審査用コード -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5528416263110291"
@@ -146,7 +146,7 @@
       border-color: var(--break-color);
     }
 
-    /* タブ切り替え（作業 / 休憩） */
+    /* タブ切り替え（作業 / 休憩 / 長休憩） */
     .mode-tabs {
       display: inline-flex;
       background: var(--result-bg);
@@ -158,7 +158,7 @@
     .tab-btn {
       border: none;
       background: none;
-      padding: 8px 20px;
+      padding: 8px 16px;
       font-size: 14px;
       font-weight: 600;
       color: var(--text-muted);
@@ -321,6 +321,14 @@
         flex-direction: column;
         align-items: flex-start;
       }
+      .mode-tabs {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -350,7 +358,8 @@
   <div class="timer-container" id="timer-box">
     <div class="mode-tabs">
       <button class="tab-btn active" id="tab-work" onclick="switchMode('work')">作業 (25分)</button>
-      <button class="tab-btn" id="tab-break" onclick="switchMode('break')">休憩 (5分)</button>
+      <button class="tab-btn" id="tab-break" onclick="switchMode('break')">短休憩 (5分)</button>
+      <button class="tab-btn" id="tab-longBreak" onclick="switchMode('longBreak')">長休憩 (15分)</button>
     </div>
 
     <div class="timer-display" id="time-display">25:00</div>
@@ -384,9 +393,29 @@
     </ul>
   </div>
 
+  <!-- SEO & AdSense 用解説コンテンツ -->
+  <section style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e2e8f0; color: #334155;">
+    <h2 style="font-size: 20px; margin-bottom: 12px; color: #0f172a;">ポモドーロ・テクニックタイマーで集中力と生産性を最大化</h2>
+    <p style="font-size: 14px; line-height: 1.7; margin-bottom: 16px;">
+      「25分間の集中作業」と「5分間の小休憩」を1サイクルとして繰り返す「ポモドーロ・テクニック（Pomodoro Technique）」を簡単に実践できるウェブタイマーです。仕事や勉強の生産性を高め、脳の疲労を防ぐタイムマネジメント手法として世界中で活用されています。
+    </p>
+
+    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">ポモドーロ・テクニックの基本的な実践手順</h3>
+    <ol style="font-size: 14px; line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
+      <li>達成したいタスク（勉強、執筆、プログラミング等）を1つ選択します。</li>
+      <li>タイマーをスタートし、25分間他の誘惑を断ち切って作業に集中します。</li>
+      <li>アラームが鳴ったらタイマーを止め、5分間の短い休憩（水分補給やストレッチなど）を取ります。</li>
+      <li>これを4サイクル繰り返した後は、15〜30分程度の長めの休憩を取り脳をリフレッシュさせます。</li>
+    </ol>
+
+    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">タイマー機能の特徴</h3>
+    <p style="font-size: 14px; line-height: 1.7;">
+      ワンクリックで「作業（25分）」「短休憩（5分）」「長休憩（15分）」の切り替えが可能です。音声通知機能により、バックグラウンドでの作業中でも終了タイミングを的確にお知らせします。
+    </p>
+  </section>
+
   <script>
-    let currentMode = 'work'; // 'work' | 'break'
-    let timeLeft = 25 * 60;
+    let currentMode = 'work'; // 'work' | 'break' | 'longBreak'
     let timerInterval = null;
     let isRunning = false;
     let completedSessions = 0;
@@ -395,11 +424,15 @@
 
     const WORK_TIME = 25 * 60;
     const BREAK_TIME = 5 * 60;
+    const LONG_BREAK_TIME = 15 * 60;
+
+    let timeLeft = WORK_TIME;
 
     const timeDisplay = document.getElementById('time-display');
     const btnStart = document.getElementById('btn-start');
     const tabWork = document.getElementById('tab-work');
     const tabBreak = document.getElementById('tab-break');
+    const tabLongBreak = document.getElementById('tab-longBreak');
     const timerBox = document.getElementById('timer-box');
 
     // 翻訳辞書
@@ -411,7 +444,8 @@
         title: 'ポモドーロタイマー',
         subtitle: '25分間の集中と5分間の休憩を繰り返し、作業効率と集中力を最大化します。',
         tabWork: '作業 (25分)',
-        tabBreak: '休憩 (5分)',
+        tabBreak: '短休憩 (5分)',
+        tabLongBreak: '長休憩 (15分)',
         btnStart: 'スタート',
         btnPause: '一時停止',
         btnReset: 'リセット',
@@ -424,7 +458,10 @@
           <li><strong>25分集中＋5分休憩：</strong> 短い集中と小休憩をセットにすることで、脳の疲労を防ぎ持続的な集中力を維持します。</li>
           <li><strong>モチベーション維持：</strong> タスクを細分化し「25分間だけ集中する」目標を作ることで、着手への心理的ハードルを下げます。</li>
           <li><strong>無料＆ダウンロード不要：</strong> ブラウザを開くだけで即座に使用でき、作業実績もカウントされます。</li>
-        `
+        `,
+        modeWorkLabel: '集中',
+        modeBreakLabel: '休憩',
+        modeLongBreakLabel: '長休憩'
       },
       en: {
         navDiff: 'Text Diff',
@@ -434,6 +471,7 @@
         subtitle: 'Maximize productivity and focus with 25-minute work intervals and 5-minute breaks.',
         tabWork: 'Work (25m)',
         tabBreak: 'Break (5m)',
+        tabLongBreak: 'Long Break (15m)',
         btnStart: 'Start',
         btnPause: 'Pause',
         btnReset: 'Reset',
@@ -446,7 +484,10 @@
           <li><strong>25m Focus + 5m Break:</strong> Alternating work and breaks prevents mental fatigue and sustains focus.</li>
           <li><strong>Boost Productivity:</strong> Breaking tasks into 25-minute chunks lowers starting friction.</li>
           <li><strong>100% Free & No Download:</strong> Runs directly in your browser with session tracking.</li>
-        `
+        `,
+        modeWorkLabel: 'Work',
+        modeBreakLabel: 'Break',
+        modeLongBreakLabel: 'Long Break'
       }
     };
 
@@ -464,6 +505,8 @@
 
       tabWork.textContent = i18n[lang].tabWork;
       tabBreak.textContent = i18n[lang].tabBreak;
+      tabLongBreak.textContent = i18n[lang].tabLongBreak;
+
       btnStart.textContent = isRunning ? i18n[lang].btnPause : i18n[lang].btnStart;
       document.getElementById('btn-reset').textContent = i18n[lang].btnReset;
       document.getElementById('btn-test').textContent = i18n[lang].btnTest;
@@ -473,6 +516,8 @@
       document.getElementById('sec-desc').textContent = i18n[lang].secDesc;
       document.getElementById('seo-title').textContent = i18n[lang].seoTitle;
       document.getElementById('seo-list').innerHTML = i18n[lang].seoList;
+
+      updateDisplay();
     }
 
     function formatTime(seconds) {
@@ -484,7 +529,11 @@
     function updateDisplay() {
       const formatted = formatTime(timeLeft);
       timeDisplay.textContent = formatted;
-      const modeLabel = currentMode === 'work' ? '集中' : '休憩';
+      
+      let modeLabel = i18n[currentLang].modeWorkLabel;
+      if (currentMode === 'break') modeLabel = i18n[currentLang].modeBreakLabel;
+      if (currentMode === 'longBreak') modeLabel = i18n[currentLang].modeLongBreakLabel;
+
       document.title = `(${formatted}) ${modeLabel} - Pomodoro | Quick Tools`;
     }
 
@@ -492,23 +541,30 @@
       pauseTimer();
       currentMode = mode;
       
+      // 全タブのクラスをリセット
+      tabWork.classList.remove('active');
+      tabBreak.classList.remove('active', 'break-tab');
+      tabLongBreak.classList.remove('active', 'break-tab');
+      btnStart.classList.remove('break-btn');
+      timerBox.classList.remove('break-mode');
+
       if (mode === 'work') {
         timeLeft = WORK_TIME;
         tabWork.classList.add('active');
-        tabBreak.classList.remove('active', 'break-tab');
-        btnStart.classList.remove('break-btn');
-        timerBox.classList.remove('break-mode');
-      } else {
+      } else if (mode === 'break') {
         timeLeft = BREAK_TIME;
         tabBreak.classList.add('active', 'break-tab');
-        tabWork.classList.remove('active');
+        btnStart.classList.add('break-btn');
+        timerBox.classList.add('break-mode');
+      } else if (mode === 'longBreak') {
+        timeLeft = LONG_BREAK_TIME;
+        tabLongBreak.classList.add('active', 'break-tab');
         btnStart.classList.add('break-btn');
         timerBox.classList.add('break-mode');
       }
       updateDisplay();
     }
 
-    // AudioContext の初期化（ユーザー操作で呼び出し）
     function initAudioContext() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -543,7 +599,12 @@
           if (currentMode === 'work') {
             completedSessions++;
             document.getElementById('session-count').textContent = completedSessions;
-            switchMode('break');
+            // 4セッションごとに長休憩、それ以外は短休憩
+            if (completedSessions % 4 === 0) {
+              switchMode('longBreak');
+            } else {
+              switchMode('break');
+            }
           } else {
             switchMode('work');
           }
@@ -562,22 +623,20 @@
 
     function resetTimer() {
       pauseTimer();
-      timeLeft = (currentMode === 'work') ? WORK_TIME : BREAK_TIME;
+      if (currentMode === 'work') timeLeft = WORK_TIME;
+      else if (currentMode === 'break') timeLeft = BREAK_TIME;
+      else if (currentMode === 'longBreak') timeLeft = LONG_BREAK_TIME;
       updateDisplay();
     }
 
-    // 聞こえやすいアラーム音（ピピピッ）
     function playAlertSound() {
       initAudioContext();
       if (!audioCtx) return;
 
       const now = audioCtx.currentTime;
 
-      // ビープ音1回目
       createTone(880, now, 0.12);
-      // ビープ音2回目
       createTone(880, now + 0.18, 0.12);
-      // ビープ音3回目（少し高音）
       createTone(1046.5, now + 0.36, 0.25);
     }
 
@@ -600,29 +659,6 @@
 
     // 初期化
     setLanguage('ja');
-    updateDisplay();
   </script>
-
-  <!-- SEO & AdSense 用解説コンテンツ -->
-  <section style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e2e8f0; color: #334155;">
-    <h2 style="font-size: 20px; margin-bottom: 12px; color: #0f172a;">ポモドーロ・テクニックタイマーで集中力と生産性を最大化</h2>
-    <p style="font-size: 14px; line-height: 1.7; margin-bottom: 16px;">
-      「25分間の集中作業」と「5分間の小休憩」を1サイクルとして繰り返す「ポモドーロ・テクニック（Pomodoro Technique）」を簡単に実践できるウェブタイマーです。仕事や勉強の生産性を高め、脳の疲労を防ぐタイムマネジメント手法として世界中で活用されています。
-    </p>
-
-    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">ポモドーロ・テクニックの基本的な実践手順</h3>
-    <ol style="font-size: 14px; line-height: 1.8; margin-bottom: 16px; padding-left: 20px;">
-      <li>達成したいタスク（勉強、執筆、プログラミング等）を1つ選択します。</li>
-      <li>タイマーをスタートし、25分間他の誘惑を断ち切って作業に集中します。</li>
-      <li>アラームが鳴ったらタイマーを止め、5分間の短い休憩（水分補給やストレッチなど）を取ります。</li>
-      <li>これを4サイクル繰り返した後は、15〜30分程度の長めの休憩を取り脳をリフレッシュさせます。</li>
-    </ol>
-
-    <h3 style="font-size: 16px; margin-bottom: 8px; color: #1e293b;">タイマー機能の特徴</h3>
-    <p style="font-size: 14px; line-height: 1.7;">
-      ワンクリックで「作業（25分）」「短休憩（5分）」「長休憩（15分）」の切り替えが可能です。音声通知機能により、バックグラウンドでの作業中でも終了タイミングを的確にお知らせします。
-    </p>
-  </section>
-  
 </body>
 </html>
