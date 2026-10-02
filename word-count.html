@@ -22,9 +22,9 @@
 
   <style>
     :root {
-      --primary-color: #10b981;     /* エメラルドグリーン */
-      --primary-hover: #059669;
-      --primary-light: #ecfdf5;    /* カードの背景用グラデーション等 */
+      --primary-color: #0284c7;     /* オーシャンブルーに統一 */
+      --primary-hover: #0369a1;     /* ホバー時の濃いブルー */
+      --primary-light: #f0f9ff;     /* カード背景用淡いブルー */
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --result-bg: #f1f5f9;
@@ -71,6 +71,7 @@
       font-size: 18px;
       letter-spacing: -0.02em;
       margin-right: 10px;
+      text-decoration: none;
     }
     nav a {
       color: #94a3b8;
@@ -227,7 +228,7 @@
     textarea:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); /* フォーカスリングを調整 */
     }
     textarea::placeholder {
       color: #94a3b8;
@@ -237,11 +238,11 @@
     .info-card {
       margin-top: 40px;
       padding: 20px 24px;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
       border-radius: 12px;
       font-size: 14px;
-      color: #166534;
+      color: #0369a1;
     }
     .info-card strong {
       font-size: 15px;
@@ -252,7 +253,7 @@
     }
     .info-card p {
       margin: 0;
-      color: #14532d;
+      color: #0c4a6e;
     }
 
     .seo-content {
@@ -296,11 +297,11 @@
       <a href="index.html" class="logo">Quick Tools</a>
       <a href="text-diff.html" id="nav-diff">テキスト比較</a>
       <a href="word-count.html" id="nav-word" class="active">文字数カウント</a>
-      <a href="pomodoro.html">ポモドーロ</a>
-      <a href="convert-case.html">全角/半角変換</a>
+      <a href="pomodoro.html" id="nav-pomo">ポモドーロ</a>
+      <a href="convert-case.html" id="nav-convert">全角/半角変換</a>
     </nav>
     <div class="lang-switch">
-      <button class="lang-btn" id="lang-ja" onclick="setLanguage('ja')">JP</button>
+      <button class="lang-btn active" id="lang-ja" onclick="setLanguage('ja')">JP</button>
       <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
     </div>
   </header>
@@ -388,6 +389,8 @@
       ja: {
         navDiff: 'テキスト比較',
         navWord: '文字数カウント',
+        navPomo: 'ポモドーロ',
+        navConvert: '全角/半角変換',
         title: '文字数カウントツール',
         subtitle: '入力したテキストの文字数・単語数・行数・原稿用紙換算数をリアルタイムで計測します。',
         labelInput: '入力テキスト',
@@ -414,6 +417,8 @@
       en: {
         navDiff: 'Text Diff',
         navWord: 'Word Count',
+        navPomo: 'Pomodoro',
+        navConvert: 'Case Converter',
         title: 'Word & Character Counter',
         subtitle: 'Real-time calculation of character count, word count, lines, and manuscript pages.',
         labelInput: 'Input Text',
@@ -447,8 +452,13 @@
 
       const navDiff = document.getElementById('nav-diff');
       const navWord = document.getElementById('nav-word');
+      const navPomo = document.getElementById('nav-pomo');
+      const navConvert = document.getElementById('nav-convert');
+
       if (navDiff) navDiff.textContent = i18n[lang].navDiff;
       if (navWord) navWord.textContent = i18n[lang].navWord;
+      if (navPomo) navPomo.textContent = i18n[lang].navPomo;
+      if (navConvert) navConvert.textContent = i18n[lang].navConvert;
 
       document.getElementById('title').textContent = i18n[lang].title;
       document.getElementById('subtitle').textContent = i18n[lang].subtitle;
